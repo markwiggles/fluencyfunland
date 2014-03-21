@@ -1,0 +1,64 @@
+.bicycle, .bus, .car, .motorcycle, .plane, .rocket, .scooter, .ship, .train, .tram{
+	background: url(sprites.png) no-repeat;
+}
+
+.bicycle{
+	background-position: 0 0;
+	width: 65px;
+	height: 91px;
+}
+
+.bus{
+	background-position: -410px -46px ;
+	width: 85px;
+	height: 44px;
+}
+
+.car{
+	background-position: -66px 0;
+	width: 85px;
+	height: 64px;
+}
+
+.motorcycle{
+	background-position: -324px 0;
+	width: 85px;
+	height: 59px;
+}
+
+.plane{
+	background-position: -152px -64px ;
+	width: 85px;
+	height: 26px;
+}
+
+.rocket{
+	background-position: -152px 0;
+	width: 85px;
+	height: 63px;
+}
+
+.scooter{
+	background-position: -496px 0;
+	width: 55px;
+	height: 91px;
+}
+
+.ship{
+	background-position: -410px 0;
+	width: 85px;
+	height: 45px;
+}
+
+.train{
+	background-position: -238px 0;
+	width: 85px;
+	height: 62px;
+}
+
+.tram{
+	background-position: -324px -60px ;
+	width: 85px;
+	height: 28px;
+}
+

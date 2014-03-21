@@ -1,0 +1,64 @@
+.backyard, .bath, .fridge, .washing_machine, .oven, .parents, .toilet, .tv, .lounge, .bed{
+	background: url(sprites.png) no-repeat;
+}
+
+.backyard{
+	background-position: 0 0;
+	width: 79px;
+	height: 97px;
+}
+
+.bath{
+	background-position: -95px -17px ;
+	width: 81px;
+	height: 52px;
+}
+
+.fridge{
+	background-position: -395.00001525878906px -123.99998474121094px ;
+	width: 79px;
+	height: 106px;
+}
+
+.washing_machine{
+	background-position: -2px -127.98750305175781px ;
+	width: 79px;
+	height: 99px;
+}
+
+.oven{
+	background-position: -402.00001525878906px -0.9999847412109375px ;
+	width: 79px;
+	height: 97px;
+}
+
+.parents{
+	background-position: -194.00001525878906px -5.9875030517578125px ;
+	width: 79px;
+	height: 83px;
+}
+
+.toilet{
+	background-position: -189.00001525878906px -124.99998474121094px ;
+	width: 79px;
+	height: 105px;
+}
+
+.tv{
+	background-position: -293.00001525878906px -150.99998474121094px ;
+	width: 79px;
+	height: 58px;
+}
+
+.lounge{
+	background-position: -296.00001525878906px -20.999984741210938px ;
+	width: 79px;
+	height: 56px;
+}
+
+.bed{
+	background-position: -97.00001525878906px -158.9875030517578px ;
+	width: 79px;
+	height: 44px;
+}
+

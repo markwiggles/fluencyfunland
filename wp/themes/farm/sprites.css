@@ -1,0 +1,64 @@
+.chicken, .horse, .duck, .pig, .sheep, .scarecrow, .tractor, .goat, .cow, .farmer{
+	background: url(sprites.png) no-repeat;
+}
+
+.chicken{
+	background-position: 0 0;
+	width: 84px;
+	height: 90px;
+}
+
+.horse{
+	background-position: -747px 0;
+	width: 87px;
+	height: 90px;
+}
+
+.duck{
+	background-position: -443px 0;
+	width: 108px;
+	height: 90px;
+}
+
+.pig{
+	background-position: -206px 0;
+	width: 120px;
+	height: 73px;
+}
+
+.sheep{
+	background-position: -85px 0;
+	width: 120px;
+	height: 85px;
+}
+
+.scarecrow{
+	background-position: -835px 0;
+	width: 66px;
+	height: 90px;
+}
+
+.tractor{
+	background-position: -656px 0;
+	width: 90px;
+	height: 90px;
+}
+
+.goat{
+	background-position: -552px 0;
+	width: 103px;
+	height: 90px;
+}
+
+.cow{
+	background-position: -327px 0;
+	width: 115px;
+	height: 90px;
+}
+
+.farmer{
+	background-position: -902px 0;
+	width: 59px;
+	height: 90px;
+}
+

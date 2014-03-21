@@ -1,0 +1,64 @@
+.beachball, .bucket, .crab, .jellyfish, .sandcastle, .lifeguard, .umbrella, .seashell, .seagull, .towel{
+	background: url(sprites.png) no-repeat;
+}
+
+.beachball{
+	background-position: 0 0;
+	width: 81px;
+	height: 80px;
+}
+
+.bucket{
+	background-position: -108px 0;
+	width: 86px;
+	height: 80px;
+}
+
+.crab{
+	background-position: -204px 0;
+	width: 85px;
+	height: 80px;
+}
+
+.jellyfish{
+	background-position: -11px -107px ;
+	width: 69px;
+	height: 80px;
+}
+
+.sandcastle{
+	background-position: -310px -112px ;
+	width: 80px;
+	height: 80px;
+}
+
+.lifeguard{
+	background-position: -428px -107px ;
+	width: 34px;
+	height: 80px;
+}
+
+.umbrella{
+	background-position: -410px 0;
+	width: 75px;
+	height: 80px;
+}
+
+.seashell{
+	background-position: -202px -120px ;
+	width: 86px;
+	height: 43px;
+}
+
+.seagull{
+	background-position: -305px -3px ;
+	width: 86px;
+	height: 72px;
+}
+
+.towel{
+	background-position: -110px -106px ;
+	width: 79px;
+	height: 80px;
+}
+

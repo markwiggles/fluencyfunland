@@ -1,0 +1,64 @@
+.bread, .car_park, .fruit, .hardware, .icecream_truck, .meat, .money, .shopkeeper, .toys, .vegetables{
+	background: url(sprites.png) no-repeat;
+}
+
+.bread{
+	background-position: -216px 0;
+	width: 85px;
+	height: 47px;
+}
+
+.car_park{
+	background-position: -44px 0;
+	width: 85px;
+	height: 78px;
+}
+
+.fruit{
+	background-position: -302px -44px ;
+	width: 85px;
+	height: 38px;
+}
+
+.hardware{
+	background-position: 0 0;
+	width: 43px;
+	height: 91px;
+}
+
+.icecream_truck{
+	background-position: -130px 0;
+	width: 85px;
+	height: 68px;
+}
+
+.meat{
+	background-position: -388px 0;
+	width: 84px;
+	height: 90px;
+}
+
+.money{
+	background-position: -558px 0;
+	width: 84px;
+	height: 85px;
+}
+
+.shopkeeper{
+	background-position: -473px 0;
+	width: 84px;
+	height: 90px;
+}
+
+.toys{
+	background-position: -302px 0;
+	width: 85px;
+	height: 43px;
+}
+
+.vegetables{
+	background-position: -216px -48px ;
+	width: 85px;
+	height: 41px;
+}
+

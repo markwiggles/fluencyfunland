@@ -1,0 +1,64 @@
+.ball, .frisbee, .kids, .monkeybars, .rocker, .sandpit, .slide, .swings, .trampoline, .tunnel{
+	background: url(sprites.png) no-repeat;
+}
+
+.ball{
+	background-position: -74px 0;
+	width: 85px;
+	height: 85px;
+}
+
+.frisbee{
+	background-position: -246px 0;
+	width: 85px;
+	height: 70px;
+}
+
+.kids{
+	background-position: 0 0;
+	width: 73px;
+	height: 91px;
+}
+
+.monkeybars{
+	background-position: -332px 0;
+	width: 85px;
+	height: 49px;
+}
+
+.rocker{
+	background-position: -636px 0;
+	width: 54px;
+	height: 91px;
+}
+
+.sandpit{
+	background-position: -332px -50px ;
+	width: 85px;
+	height: 32px;
+}
+
+.slide{
+	background-position: -570px 0;
+	width: 65px;
+	height: 91px;
+}
+
+.swings{
+	background-position: -160px 0;
+	width: 85px;
+	height: 74px;
+}
+
+.trampoline{
+	background-position: -503px 0;
+	width: 66px;
+	height: 91px;
+}
+
+.tunnel{
+	background-position: -418px 0;
+	width: 84px;
+	height: 89px;
+}
+

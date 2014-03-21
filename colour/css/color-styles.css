@@ -1,0 +1,113 @@
+/* 
+    Document   : color-styles
+    Created on : 15/03/2014, 7:39:07 AM
+    Author     : Mark
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+html {
+    font-size: 16px;
+    background-image:url('../../img/wave.jpg');
+    background-repeat:repeat;
+}
+header {
+    margin: auto;
+    width: 1024px;
+}
+
+#content {
+    width: 1024px;
+    height: 768px;
+    position: relative;
+    margin: auto;
+}
+
+#container {
+    width: 774px;
+    height: 768px;
+    margin: 0;
+    float: left;
+    background-color: white;
+}
+#color-header {
+    position: absolute;
+    top: 0;
+    left: 300px;   
+}
+.color-thumb {
+    position: absolute;
+    width: 100px;
+}
+.color-thumb:hover {
+    height: 150px;
+    width: auto;
+    -webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
+    filter: url(../css/shadow.svg#drop-shadow);
+    /* for IE 8 & 9 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+    /* For IE 5.5 - 7 */
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+}
+.color-thumb:active {
+    opacity: 0.7;
+}
+
+#flowerthumb {
+    top: 190px;
+    left: 300px;
+}
+#rocketthumb {
+    top: 420px;
+    left: 365px;
+}
+#cowboythumb {
+    top: 190px;
+    left: 600px;
+}
+#dinothumb {
+    top: 420px;
+    left: 670px;
+}
+#soccerthumb {
+    top: 420px;
+    left: 170px;
+}
+
+#colors {
+    float: right;
+    width:250px;
+    height: 768px;
+    background-color: white;
+}
+
+#back {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    height: 50px;
+    width: auto;
+    z-index: 99;
+}
+#back:hover{
+    -webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
+    filter: url(../css/shadow.svg#drop-shadow);
+    /* for IE 8 & 9 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+    /* For IE 5.5 - 7 */
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+    cursor: auto;
+}
+#back:active {
+    opacity: 0.7;
+    cursor: auto;
+}
+
+#drawing, #back {
+    display: none;
+}
+

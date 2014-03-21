@@ -1,0 +1,64 @@
+.baseball, .basketball, .cricket, .football, .gymnastics, .netball, .running, .soccer, .swimming, .tennis{
+	background: url(sprites.png) no-repeat;
+}
+
+.baseball{
+	background-position: -54px 0;
+	width: 85px;
+	height: 85px;
+}
+
+.basketball{
+	background-position: -140px 0;
+	width: 85px;
+	height: 85px;
+}
+
+.cricket{
+	background-position: -226px 0;
+	width: 85px;
+	height: 85px;
+}
+
+.football{
+	background-position: -312px 0;
+	width: 85px;
+	height: 85px;
+}
+
+.gymnastics{
+	background-position: 0 0;
+	width: 53px;
+	height: 91px;
+}
+
+.netball{
+	background-position: -734px 0;
+	width: 76px;
+	height: 91px;
+}
+
+.running{
+	background-position: -655px 0;
+	width: 78px;
+	height: 91px;
+}
+
+.soccer{
+	background-position: -570px 0;
+	width: 84px;
+	height: 85px;
+}
+
+.swimming{
+	background-position: -398px 0;
+	width: 85px;
+	height: 85px;
+}
+
+.tennis{
+	background-position: -484px 0;
+	width: 85px;
+	height: 85px;
+}
+

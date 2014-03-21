@@ -1,0 +1,64 @@
+.bbq, .boomerang, .dog, .drinking_fountain, .park_bench, .picnic_basket, .picnic_blanket, .playground, .tennisball, .ants{
+	background: url(sprites.png) no-repeat;
+}
+
+.bbq{
+	background-position: 0 0;
+	width: 79px;
+	height: 91px;
+}
+
+.boomerang{
+	background-position: -510px 0;
+	width: 85px;
+	height: 50px;
+}
+
+.dog{
+	background-position: -337.99999237060547px 0;
+	width: 85px;
+	height: 58px;
+}
+
+.drinking_fountain{
+	background-position: -663px 0;
+	width: 63px;
+	height: 91px;
+}
+
+.park_bench{
+	background-position: -596px 0;
+	width: 66px;
+	height: 91px;
+}
+
+.picnic_basket{
+	background-position: -166px 0;
+	width: 85px;
+	height: 79px;
+}
+
+.picnic_blanket{
+	background-position: -424px 0;
+	width: 85px;
+	height: 57px;
+}
+
+.playground{
+	background-position: -252px 0;
+	width: 85px;
+	height: 67px;
+}
+
+.tennisball{
+	background-position: -80px 0;
+	width: 85px;
+	height: 82px;
+}
+
+.ants{
+	background-position: -424px -58px ;
+	width: 85px;
+	height: 32px;
+}
+

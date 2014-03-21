@@ -1,0 +1,64 @@
+.bird, .goldfish, .guineapig, .hermitcrab, .kitten, .lamb, .mouse, .puppy, .rabbit, .turtle{
+	background: url(sprites.png) no-repeat;
+}
+
+.bird{
+	background-position: -393.00001525878906px -104px ;
+	width: 85px;
+	height: 81px;
+}
+
+.goldfish{
+	background-position: -397.00001525878906px -6.9999847412109375px ;
+	width: 85px;
+	height: 78px;
+}
+
+.guineapig{
+	background-position: -298.99998474121094px -120px ;
+	width: 85px;
+	height: 54px;
+}
+
+.hermitcrab{
+	background-position: -292.00001525878906px -3px ;
+	width: 85px;
+	height: 85px;
+}
+
+.kitten{
+	background-position: -196.99998474121094px -97px ;
+	width: 78px;
+	height: 91px;
+}
+
+.lamb{
+	background-position: -101px -96px ;
+	width: 85px;
+	height: 85px;
+}
+
+.mouse{
+	background-position: -211.00001525878906px -1px ;
+	width: 65px;
+	height: 91px;
+}
+
+.puppy{
+	background-position: 0 -101px ;
+	width: 85px;
+	height: 77px;
+}
+
+.rabbit{
+	background-position: -99.00001525878906px 0;
+	width: 85px;
+	height: 76px;
+}
+
+.turtle{
+	background-position: 0 -10.999984741210938px ;
+	width: 85px;
+	height: 64px;
+}
+

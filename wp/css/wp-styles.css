@@ -1,0 +1,140 @@
+html {
+    font-size: 16px;
+    background-image:url('../../img/wave.jpg');
+    background-repeat:repeat;
+}
+﻿body {
+}
+#outer-wrapper {
+    width: 64em;
+    height: 48em;
+    margin: 0 auto;
+}
+header {
+    width: 1024px;
+    height: auto;
+}
+header img {
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+}
+
+#content {
+    position: relative;
+    width: 1024px;
+    height: 768px;
+    background-color: white;
+    text-align: center;
+}
+
+.photosets {
+    float:right;
+    clear:both;
+}
+.photosets a {
+    width: 100px;
+}
+#themes {
+    width: 1024px;
+    height: 768px;
+}
+#themes a {
+    padding: 10px;
+    min-width: 40px;
+    font-size: 1.2em;
+}
+#themes img {
+    width: 230px;
+    height: auto;
+    margin: 20px 30px 0 30px ;
+}
+#themes a:hover {
+    background-color: #FF9999;
+}
+.selected {
+    background-color: #FF6699;
+}
+
+.loading {
+    background-image: url('../../img/ajax-loader.gif');
+    background-repeat: no-repeat;
+    background-position: top;
+}
+
+#col1, #col2 {
+    width: 110px;
+    height: 560px;
+    margin-top: 2em;
+}
+#col1 {
+    float: left;
+}
+#col2 {
+    float: right;
+}
+
+#col1 img, #col2 img {
+    width: 90px;
+    margin-left: 10px;
+}
+
+.customImage {
+    display: none;
+}
+#bg-canvas, #bg-canvas2 {
+    width: 804px;
+    height:560px;
+    top: 50px;
+    left: 110px;
+}
+#image-div {
+    float: left;
+    margin-top: 3em;
+    width: 804px;
+    height: 560px;
+}
+#image-div img {
+    width: 804px;
+    height: 560px;
+}
+.image_bg {
+    /* -- CSS3 - add a drop shadow -- */
+    -webkit-box-shadow: 0 0 15px 5px #fff;
+    -moz-box-shadow: 0 0 15px 5px #fff;
+    box-shadow: 0 0 15px 5px #fff;
+}
+.image_bg {
+    margin-top: 3em;
+    width: 804px;
+    height:560px;
+    float:left;
+}
+
+.sprite:hover, #col1 img:hover, #col2 img:hover {
+    -webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
+    filter: url(shadow.svg#drop-shadow);
+    /* for IE 8 & 9 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+    /* For IE 5.5 - 7 */
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+}
+.sprite {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.customThumb {
+    margin-top: 20px;
+}
+
+#showTextMsg {
+    position: absolute;
+    display: none;
+    color: red;
+    left: 120px;
+}
+
+
+
+
