@@ -5,7 +5,6 @@ var textObj = {};
 var animation = {};
 var theme = null;
 
-
 window.requestAnimFrame = (function() {
     return  window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -21,12 +20,8 @@ $(function() {
     initContext(imageObj, "bg-canvas");
     initContext(textObj, "bg-canvas2");
     initDrawObject();
-
     initAnimation();
     //displayPosition();
-
-    $("#col1, #col2, #bg-canvas,#bg-canvas2, #image-div ").hide();
-
 });
 function initDrawObject() {
     imageObj.draw = function() {
@@ -58,63 +53,41 @@ function getThemeNames() {
             .done(function(result) {
         //loop through the names: display the navigation and add sprite images
         var themeNames = $.parseJSON(result);
-
-
-
         themeNames.push("custom");
         $.each(themeNames, function(idx, themeName) {
-
-            $("#theme-menu").append($("<img>")
+            $("#themes").append($("<img>")
                     .attr("src", "img/thumbs/" + themeName + ".png")
                     .attr("alt", themeName)
                     .addClass("nav")
-                    );
-            theme !== "custom" ? addSpriteStylesheet(themeName) : "";
+        );
+            addSpriteStylesheet(themeName);
+            $("#themes").show();
+            initNavigation();
         });
-
-        initNavigation();
-
+        //getFlickrSets();
     });//end ajax
 }
 
 function initNavigation() {
     //initialise the navigation click event to assign theme and display selected object
-    $(".nav").mousedown(function(event) {
-        event.stopPropagation();
-        event.preventDefault();
+    $(".nav").mousedown(function() {
+        console.log("test");
 
-        $("#col1, #col2, #bg-canvas, #bg-canvas2, #back, #image-div").show();
-        $("#showTextMsg").hide();
-        //hide theme menu
-        $("#theme-menu").hide();
-
-        if ($(this).attr("alt") !== "custom") {
-            //assign the theme and collect the images
-            theme = $(this).attr("alt");
-            getThemeImages();
-            imageObj.name = null;
-        } else {
-            //do something for custom thumb
-        }
-
+        //hide the menu, assign the theme and collect the images
+        $("#themes").hide();
+        theme = $(this).attr("alt");
+        getThemeImages();
+        imageObj.name = null;
 
         //stop further navigation so the images don't appear twice
         $(".nav").unbind("mousedown");
 
+        
+        //if a custom set, then show the selected thumbs
+//        if ($(this).hasClass("custom")) {
+//            getFlickrThumbs($(this).attr("alt"));
+//        }
     });
-
-    //initiaalise event to show custom page with sets
-    $(".custom").mousedown(function() {
-        //show page with
-        //getFlickrSets();
-        //getFlickrThumbs($(this).attr("alt"));
-    });
-
-    $("#back").mousedown(function() {
-        $("#col1, #col2, #bg-canvas, #bg-canvas2, #back, #image-div").hide();
-        $("#theme-menu").show();
-    });
-
 }
 
 //get the image names relating to the selected theme
@@ -125,47 +98,44 @@ function getThemeImages() {
     clearCanvas(imageObj);
     clearCanvas(textObj);
 
-    if (theme !== "custom") {
+    $.ajax({
+        type: "GET",
+        url: "./include/get_images.php",
+        datatype: "json",
+        cache: false,
+        data: {theme: theme}
+    })
+            //callback
+            .done(function(result) {
+        //loop through the names and display the images, evenly in the 2 columns
+        var imageNames = $.parseJSON(result);
+        var imageSounds = new Array();
+        $.each(imageNames, function(idx, imageName) {
+            if (idx < imageNames.length / 2) {
+                $("#col1").append($("<div>").addClass(imageName).addClass("sprite"));
+            } else {
+                $("#col2").append($("<div>").addClass(imageName).addClass("sprite"));
+            }
+            //change file name syntax to suit ionSound plugin
+            imageSounds.push(imageName.replace("_", ""));
+        });//end each
+        //tidy the icons so they are evenly spaced
+        spaceElements("col1");
+        spaceElements("col2");
+        initNavigation();
 
-        $.ajax({
-            type: "GET",
-            url: "./include/get_images.php",
-            datatype: "json",
-            cache: false,
-            data: {theme: theme}
-        })
-                //callback
-                .done(function(result) {
-            //loop through the names and display the images, evenly in the 2 columns
-            var imageNames = $.parseJSON(result);
-            var imageSounds = new Array();
-            $.each(imageNames, function(idx, imageName) {
-                if (idx < imageNames.length / 2) {
-                    $("#col1").append($("<div>").addClass(imageName).addClass("sprite"));
-                } else {
-                    $("#col2").append($("<div>").addClass(imageName).addClass("sprite"));
-                }
-                //change file name syntax to suit ionSound plugin
-                imageSounds.push(imageName.replace("_", ""));
-            });//end each
-            //tidy the icons so they are evenly spaced
-            spaceElements("col1");
-            spaceElements("col2");
-            initNavigation();
-
-            //show the first background
-            showBackground($("#col1").children(":first").attr('class').split(' ')[0] + "_bg");
-            // show the theme as text
-            drawText(theme, 120, 200);
-            //initialise the sounds
-            initSounds(imageSounds);
-            //initialise the click event for the icons
-            initSpriteEvent();
-            //show the content ie the first background and the icons
-            initTextEvent();
-            $("#content").delay(100).fadeIn(100);
-        });//end ajax
-    }
+        //show the first background
+        showBackground($("#col1").children(":first").attr('class').split(' ')[0] + "_bg");
+        // show the theme as text
+        drawText(theme, 100, 180);
+        //initialise the sounds
+        initSounds(imageSounds);
+        //initialise the click event for the icons
+        initSpriteEvent();
+        //show the content ie the first background and the icons
+        initTextEvent();
+        $("#content").delay(100).fadeIn(100);
+    });//end ajax
 }
 
 function initTextEvent() {
@@ -196,7 +166,6 @@ function initSpriteEvent() {
         showBackground(bgImg);
     });
 
-
 }
 
 function showBackground(imageName) {
@@ -213,10 +182,9 @@ function showBackground(imageName) {
         initAnimation(imageObj);
         animate(imageObj);
         //play the sound
-        if (imageObj.name !== null) {
-            $.ionSound.play((imageObj.name).replace("_", ""));
-            $("#showTextMsg").show();
-        }
+        $.ionSound.play((imageObj.name).replace("_", ""));
+        //show text msg
+        $("#showTextMsg").show();
     });
 }
 //function to initialise the sounds
@@ -312,7 +280,7 @@ function drawText(text, size, posY) {
         textObj.ctx.shadowOffsetY = 2;
         textObj.ctx.strokeStyle = 'black';
         textObj.ctx.lineWidth = 3;
-        textObj.ctx.strokeText(text, 400, posY); //posY: 80 for objects, 120 for theme 
+        textObj.ctx.strokeText(text, 400, posY); //posY: 80 for objects, 
 
 //        var width = textObj.ctx.measureText(text).width;
 //        textObj.ctx.fillStyle = 'navy';
@@ -330,13 +298,13 @@ function setObjectParams(object) {
     object.beachball = {x: 300, y: 250, scale: 1, anim: function() {
             console.log("test");
         }};
-    object.bucket = {x: 200, y: 300, scale: 1};
+    object.bucket = {x: 230, y: 300, scale: 1};
     object.crab = {x: 300, y: 300, scale: 1};
     object.jellyfish = {x: 300, y: 100, scale: 1};
     object.lifeguard = {x: 300, y: 200, scale: 1.1};
     object.sandcastle = {x: 350, y: 350, scale: 1};
     object.seagull = {x: 200, y: 100, scale: 0.7};
-    object.seashell = {x: 400, y: 380, scale: 1.1};
+    object.seashell = {x: 400, y: 300, scale: 0.7};
     object.towel = {x: 100, y: 350, scale: 1};
     object.backyard = {x: 100, y: 0, scale: 0.9};
     object.bath = {x: 100, y: 200, scale: 1};
@@ -445,9 +413,11 @@ function spaceElements(column) {
 }
 
 function addSpriteStylesheet(theme) {
-    $(document.head).append(
-            "<link rel='stylesheet' type='text/css' href='themes/" + theme + "/sprites.css'/>"
-            );
+    if (theme !== "custom") {
+        $(document.head).append(
+                "<link rel='stylesheet' type='text/css' href='themes/" + theme + "/sprites.css'/>"
+                );
+    }
 }
 
 function getFlickrSets() {

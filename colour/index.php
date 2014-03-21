@@ -40,7 +40,7 @@
                     <img class="color-thumb" id="cowboythumb" src="img/cowboythumb.png"/>
                     <img class="color-thumb" id="soccerthumb" src="img/soccerthumb.png"/>
                 </div>
-                <img id="back" src="img/back.png"/>
+                <img id="back" src="../img/back.png"/>
                 <div id="drawing">
                     
                     <div id="container"></div>

@@ -15,8 +15,11 @@
     <body>
         <div id="outer-wrapper">
             <header><img src="../img/ffl.png"/></header>
+            
+            <nav id="themes"></nav>
             <div id="content">
-                <div id="themes"></div>
+                <img id="back" src="../img/back.png"/>
+                <div id="theme-menu"></div>
                 <p id="showTextMsg">Click anywhere in the picture to display the text</p>
                 <div id="col1"></div>
                 <canvas id="bg-canvas" width="804" height="560"></canvas>
