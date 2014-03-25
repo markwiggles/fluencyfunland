@@ -1,0 +1,37 @@
+html {
+    font-size: 16px;
+    background-image:url('../../img/wave.jpg');
+    background-repeat:repeat;
+    margin: 0;
+    padding: 0;
+}
+﻿body {
+    margin: 0;
+    padding: 0;
+}
+#outer-wrapper {
+    width: 64em;
+    height: 48em;
+    margin: 0 auto;
+}
+
+header img {
+    margin: 0 auto;
+    width: 100%;
+    height: 0;
+    display:none;
+}
+
+#container {
+    border:solid 1px #ccc;
+    margin-top: 0px;
+    width:1024px;
+    height: 680px;
+    background-color: white;
+}
+
+.loading {
+    background-image: url('../../img/ajax-loader.gif');
+    background-repeat: no-repeat;
+    background-position: center;
+}

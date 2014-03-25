@@ -1,5 +1,5 @@
 ﻿<?php 
-?>
+?> 
 <!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -15,11 +15,10 @@
     <body>
         <div id="outer-wrapper">
             <header><img src="../img/ffl.png"/></header>
-            
-            <nav id="themes"></nav>
             <div id="content">
                 <img id="back" src="../img/back.png"/>
                 <div id="theme-menu"></div>
+                <div id="custom-menu"></div>
                 <p id="showTextMsg">Click anywhere in the picture to display the text</p>
                 <div id="col1"></div>
                 <canvas id="bg-canvas" width="804" height="560"></canvas>

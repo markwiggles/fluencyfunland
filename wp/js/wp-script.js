@@ -4,6 +4,7 @@ var imageObj = {};
 var textObj = {};
 var animation = {};
 var theme = null;
+var flickrSets = {};
 
 
 window.requestAnimFrame = (function() {
@@ -17,7 +18,7 @@ window.requestAnimFrame = (function() {
 
 //document on load
 $(function() {
-    getThemeNames();
+    displayThemeMenu();
     initContext(imageObj, "bg-canvas");
     initContext(textObj, "bg-canvas2");
     initDrawObject();
@@ -25,7 +26,7 @@ $(function() {
     initAnimation();
     //displayPosition();
 
-    $("#col1, #col2, #bg-canvas,#bg-canvas2, #image-div ").hide();
+    $("#col1, #col2, #bg-canvas, #bg-canvas2, #image-div").hide();
 
 });
 function initDrawObject() {
@@ -48,18 +49,19 @@ function initContext(object, canvasId) {
     }
 }
 
-function getThemeNames() {
+/**Function: collects the theme names by looking through the folders,
+ * creates the theme menu for navigation, and adds the sprite stylesheets
+ * @returns void
+ */
+function displayThemeMenu() {
     $.ajax({
         type: "GET",
         url: "./include/get_themes.php",
         datatype: "json",
         cache: false
-    })      //callback
-            .done(function(result) {
+    }).done(function(result) {
         //loop through the names: display the navigation and add sprite images
         var themeNames = $.parseJSON(result);
-
-
 
         themeNames.push("custom");
         $.each(themeNames, function(idx, themeName) {
@@ -69,16 +71,16 @@ function getThemeNames() {
                     .attr("alt", themeName)
                     .addClass("nav")
                     );
-            theme !== "custom" ? addSpriteStylesheet(themeName) : "";
+            themeName !== "custom" ? addSpriteStylesheet(themeName) : "";
         });
-
-        initNavigation();
+        initThemeNavigation();
 
     });//end ajax
 }
 
-function initNavigation() {
-    //initialise the navigation click event to assign theme and display selected object
+function initThemeNavigation() {
+
+    //initialise the wp thumbs event to assign theme and display selected background and sprites
     $(".nav").mousedown(function(event) {
         event.stopPropagation();
         event.preventDefault();
@@ -88,45 +90,45 @@ function initNavigation() {
         //hide theme menu
         $("#theme-menu").hide();
 
-        if ($(this).attr("alt") !== "custom") {
-            //assign the theme and collect the images
-            theme = $(this).attr("alt");
-            getThemeImages();
-            imageObj.name = null;
+        if ($(this).attr("alt") === "custom") {
+            //eg show page with the sets and navigation to each set
+            showCustomPage();
         } else {
-            //do something for custom thumb
+            //assign the theme and collect the images etc
+            theme = $(this).attr("alt");
+            displayThemeSpriteImages();
+            console.log("theme nav event");
+            imageObj.name = null;
         }
-
-
-        //stop further navigation so the images don't appear twice
-        $(".nav").unbind("mousedown");
-
     });
 
-    //initiaalise event to show custom page with sets
-    $(".custom").mousedown(function() {
-        //show page with
-        //getFlickrSets();
-        //getFlickrThumbs($(this).attr("alt"));
-    });
-
+    //initialise event to take us back to the wp menu
     $("#back").mousedown(function() {
-        $("#col1, #col2, #bg-canvas, #bg-canvas2, #back, #image-div").hide();
-        $("#theme-menu").show();
-    });
 
+        //clear the divs
+        $("#col1, #col2, #image-div").empty();
+        clearCanvas(imageObj);
+        clearCanvas(textObj);
+
+        $("#col1, #col2, #bg-canvas, #bg-canvas2, #back, #image-div, #custom-menu").hide();      
+        
+        if (theme === "custom") {
+            $("#custom-menu").show();
+            $("#back").show();
+        } else {
+            $("#theme-menu").show();
+        }
+    });
 }
 
-//get the image names relating to the selected theme
-function getThemeImages() {
+/** Function to get the image names for the selected theme
+ * @returns void
+ */
+function displayThemeSpriteImages() {
 
-    //clear the decks
-    $("#col1, #col2, #image-div").empty();
-    clearCanvas(imageObj);
-    clearCanvas(textObj);
-
+    // get the names of all the objects in the (current) theme folder
+    // and loop through them to display the sprite thumbs, evenly in the columns
     if (theme !== "custom") {
-
         $.ajax({
             type: "GET",
             url: "./include/get_images.php",
@@ -136,11 +138,12 @@ function getThemeImages() {
         })
                 //callback
                 .done(function(result) {
-            //loop through the names and display the images, evenly in the 2 columns
+
             var imageNames = $.parseJSON(result);
             var imageSounds = new Array();
+            var numColumns = 2;
             $.each(imageNames, function(idx, imageName) {
-                if (idx < imageNames.length / 2) {
+                if (idx < imageNames.length / numColumns) {
                     $("#col1").append($("<div>").addClass(imageName).addClass("sprite"));
                 } else {
                     $("#col2").append($("<div>").addClass(imageName).addClass("sprite"));
@@ -151,39 +154,70 @@ function getThemeImages() {
             //tidy the icons so they are evenly spaced
             spaceElements("col1");
             spaceElements("col2");
-            initNavigation();
 
             //show the first background
             showBackground($("#col1").children(":first").attr('class').split(' ')[0] + "_bg");
-            // show the theme as text
-            drawText(theme, 120, 200);
             //initialise the sounds
             initSounds(imageSounds);
             //initialise the click event for the icons
             initSpriteEvent();
+            //initialise the the showing of the text when background clicked
+            initShowTextEvent();
             //show the content ie the first background and the icons
-            initTextEvent();
             $("#content").delay(100).fadeIn(100);
         });//end ajax
     }
 }
 
-function initTextEvent() {
+/** Function to show the custom page
+ * @returns void
+ */
+function showCustomPage() {
+    
+    theme = "custom";
+    //clear the divs ready for the next images
+    $("#col1, #col2, #image-div").empty();
+    $("#custom-menu").empty();
+    //clear and hide the canvas's
+    clearCanvas(imageObj);
+    clearCanvas(textObj);
+    $("#image-div, #bg-canvas, #bg-canvas2").hide();
+    //show the sets
+    displayCustomSets();
+    $("#custom-menu").show();
+}
+
+function preloadFlickrImages() {
+
+    //get the sets in the userId
+    //for each set, get the images, and place in array
+
+}
+
+/** Function to initialise the event to show the text when the background is clicked
+ * @returns void
+ */
+function initShowTextEvent() {
     $("#bg-canvas2").mousedown(function() {
         drawText(imageObj.name, 70, 80);
     });
 }
 
+/** Function to initialise the click event to show the selected image and bg
+ * @returns {void}
+ */
 function initSpriteEvent() {
-
-    //initialise the click event to show the selected image and bg
     $(".sprite").mousedown(function() {
 
         var spriteClass = $(this).attr("class");
         imageObj.name = spriteClass.replace(" sprite", "");
+        
+       console.log(textObj);
+       clearCanvas(textObj);
 
         if (imageObj.ctx) {
             clearCanvas(imageObj);
+            clearCanvas(textObj);
         }
         if (textObj.ctx) {
             clearCanvas(textObj);
@@ -195,10 +229,12 @@ function initSpriteEvent() {
         //empty the image div and append new background image
         showBackground(bgImg);
     });
-
-
 }
 
+/** Function for displaying background from the selected sprite
+ * @param {type} imageName: image name from sprite alt
+ * @returns void
+ */
 function showBackground(imageName) {
     $("#image-div").empty();
     $("#image-div").addClass("loading");
@@ -208,6 +244,8 @@ function showBackground(imageName) {
     $(image).load(function() {
         $("#image-div").append(image).hide().fadeIn(500, function() {
             $("#image-div").removeClass("loading");
+            // show the theme as text
+            //drawText(theme, 120, 200);
         });
         //draw the object/animation
         initAnimation(imageObj);
@@ -257,6 +295,11 @@ function drawAnimation(object) {
 //    update(object);
 }
 
+/** Function to update the drawn object
+ * 
+ * @param {type} object
+ * @returns {undefined}
+ */
 function update(object) {
     clearCanvas(object);
     object.draw();
@@ -274,9 +317,12 @@ function update(object) {
 //         * i.e. how elastic the collision will be.
 //         * If it's 1, then the collision will be perfectly elastic. 
 //         * If 0, then it will be inelastic. */
-
 }
 
+/** Function to clear the canvas drawing
+ * @param {object} the image object
+ * @returns void
+ */
 function clearCanvas(object) {
     object.ctx.clearRect(0, 0, 804, 560);
 }
@@ -328,7 +374,7 @@ function drawText(text, size, posY) {
 function setObjectParams(object) {
 
     object.beachball = {x: 300, y: 250, scale: 1, anim: function() {
-            console.log("test");
+            //console.log("test");
         }};
     object.bucket = {x: 200, y: 300, scale: 1};
     object.crab = {x: 300, y: 300, scale: 1};
@@ -405,26 +451,6 @@ function setObjectParams(object) {
     object.tram = {x: 120, y: 180, scale: 1.2};
 }
 
-function displayPosition() {
-    $("#image-div, #bg-canvas1, #bg-canvas2").mousedown(function(e) {
-        var pos = findPos(this);
-        x = e.pageX - pos.x;
-        y = e.pageY - pos.y;
-        var coordinateDisplay = "x=" + x + ", y=" + y;
-        console.log(coordinateDisplay);
-    });
-}
-function findPos(obj) {
-    var curleft = 0, curtop = 0;
-    if (obj.offsetParent) {
-        do {
-            curleft += obj.offsetLeft;
-            curtop += obj.offsetTop;
-        } while (obj = obj.offsetParent);
-        return {x: curleft, y: curtop};
-    }
-    return undefined;
-}
 
 function spaceElements(column) {
 
@@ -439,10 +465,11 @@ function spaceElements(column) {
         heights += $(element).height();
         //console.log("hts: " + heights);
     });
-    var margin = ($("#" + column).height() - heights) / 5;
+    var margin = ($("#" + column).height() - heights) / elements.length;
     $("#" + column + " .sprite").css({"margin-top": margin});
     $("#" + column + " img").css({"margin-top": margin});
 }
+
 
 function addSpriteStylesheet(theme) {
     $(document.head).append(
@@ -450,14 +477,22 @@ function addSpriteStylesheet(theme) {
             );
 }
 
-function getFlickrSets() {
+/**Function to call Flickr to get any photoset names and ids
+ * 
+ * @returns {undefined}
+ */
+function displayCustomSets() {
+
+    $("#custom-menu").addClass("loading");
+
     $.ajax({
         type: "GET",
         url: "./include/get_flickr_sets.php",
         datatype: "json",
         cache: false
-    })
-            .done(function(result) { //when the pics come back
+    }).done(function(result) {
+
+        $("#custom-menu").removeClass("loading");
 
         var jsonObj = $.parseJSON(result);
 
@@ -467,19 +502,26 @@ function getFlickrSets() {
 
         $.each(photosets, function(idx, photoset) {
             //loop through the data and append names,ids to create navigation for the sets
-            $(".photosets")
-                    .append($("<a>")
-                    .html(photoset.title._content)
+            $("#custom-menu")
+                    .append($("<div>").addClass("custom-item")
                     .attr("alt", photoset.id)
-                    .addClass("custom").addClass("nav")
-                    );
+                    .append($("<span>").html(photoset.title._content)
+                    ));
         });
-        initNavigation();
+
+        //initialise navigation to select the images
+        $(".custom-item").mousedown(function() {
+            //show the divs
+            $("#custom-menu").hide();
+            $("#col1, #col2, #bg-canvas, #bg-canvas2, #back, #image-div").show();
+
+            displayFlickrThumbs($(this).attr("alt"));
+        });
+
     });//end ajax
 }
 
-
-function getFlickrThumbs(photosetId) {
+function displayFlickrThumbs(photosetId) {
 
     $("#image-div").addClass("loading");
 
@@ -494,6 +536,8 @@ function getFlickrThumbs(photosetId) {
         //Everything to be done when the thumb images come back
         var jsonObj = $.parseJSON(result);
         var photos = jsonObj.photoset.photo;
+
+
         //loop through the data and create the pics in the right div
         $.each(photos, function(idx, photo) {
             //add the thumbnails to the columns evenly
@@ -504,14 +548,12 @@ function getFlickrThumbs(photosetId) {
         //show the content ie the thumbnails
         $("#content").delay(100).fadeIn(100);
         $("#image-div").removeClass("loading");
-        initNavigation();
-
-        initCustomThumbEvent()
 
         //initialise event to display alt text - ie title
         $("#bg-canvas2").mousedown(function() {
             drawText($("#image-div .customImage:visible").attr("alt"), 70, 80);
         });
+        initCustomThumbEvent();
         //spaceElements("col1");
         //spaceElements("col2");
         //trigger event on first image - ie load first image
@@ -548,10 +590,33 @@ function createImageUrl(photo, size) {
 
 //Function to initialise event to display the custom images selected by thumbs
 function initCustomThumbEvent() {
+
     $("#col1 img, #col2 img").mousedown(function() {
         $("#showTextMsg").show();
         $(".customImage").hide();
         clearCanvas(textObj);
         $("#" + $(this).attr("id") + "_lge").fadeIn(500);
     }); //end mousedown
+}
+
+
+function displayPosition() {
+    $("#container").mousedown(function(e) {
+        var pos = findPos(this);
+        x = e.pageX - pos.x;
+        y = e.pageY - pos.y;
+        var coordinateDisplay = "x=" + x + ", y=" + y;
+        console.log(coordinateDisplay);
+    });
+}
+function findPos(obj) {
+    var curleft = 0, curtop = 0;
+    if (obj.offsetParent) {
+        do {
+            curleft += obj.offsetLeft;
+            curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+        return {x: curleft, y: curtop};
+    }
+    return undefined;
 }
