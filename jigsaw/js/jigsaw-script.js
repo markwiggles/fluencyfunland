@@ -1,7 +1,7 @@
 
 var stage;
 var bgLayer;
-var boxLayer;
+var pceLayer;
 
 var jigsaw = {};
 var origin = {};
@@ -17,6 +17,10 @@ var heightContainer;
 var jigsaw = {name: "", numPieces: 0, numCols: 0, numRows: 0, widthImg: 0, heightImg: 0, sounds: []};
 
 var jig1 = {name: "jig1", numPieces: 6, numCols: 3, numRows: 2, widthImg: 205, heightImg: 236, sounds: ["sheep"]};
+var jig2 = {name: "jig2", numPieces: 6, numCols: 3, numRows: 2, widthImg: 205, heightImg: 236, sounds: ["bus"]};
+var jig3 = {name: "jig3", numPieces: 6, numCols: 3, numRows: 2, widthImg: 205, heightImg: 236, sounds: ["bed"]};
+var jig4 = {name: "jig4", numPieces: 9, numCols: 3, numRows: 3, widthImg: 205, heightImg: 158, sounds: ["seagull"]};
+var jig5 = {name: "jig5", numPieces: 9, numCols: 3, numRows: 3, widthImg: 205, heightImg: 158, sounds: ["monkeys"]};
 
 /**Function: runs when page loads
  */
@@ -24,8 +28,8 @@ $(function() {
 
     heightContainer = $("#container").height();
     widthContainer = $("#container").width();
-    jigsaw = jig1;
-    
+    jigsaw = jig5;
+
     initStage();
     initLayers();
     initSounds();
@@ -33,6 +37,8 @@ $(function() {
     createGrid();
     createBackgoundImage((jigsaw.widthImg * jigsaw.numCols), (jigsaw.heightImg * jigsaw.numRows));
     displayPieces();
+
+    test();
 
     $("#back, #refresh").show();
 
@@ -62,9 +68,9 @@ function initStage() {
 function initLayers() {
     //create the layer/s
     bgLayer = new Kinetic.Layer();
-    boxLayer = new Kinetic.Layer();
+    pceLayer = new Kinetic.Layer();
     stage.add(bgLayer);
-    stage.add(boxLayer);
+    stage.add(pceLayer);
 }
 
 //create the grid, and assign the coords and the number of the piece
@@ -73,16 +79,24 @@ function createGrid() {
     var strokeWidth = 1;
 
     for (var i = 0; i < jigsaw.numPieces; i++) {
-        var ptX, ptY;
+        var ptX, ptY; // the coords of each box in the grid
 
         if (i < jigsaw.numCols) {//row1
             ptX = origin.x + (jigsaw.widthImg * i);
             ptY = origin.y + (jigsaw.heightImg * 0);
-            boxes[i] = kRect(ptX, ptY, jigsaw.widthImg, jigsaw.heightImg, "lightgrey", strokeWidth, boxLayer);
-        } else {//row2  
+            boxes[i] = kRect(ptX, ptY, jigsaw.widthImg, jigsaw.heightImg, "lightgrey", strokeWidth, bgLayer);
+        } else {//row2 & 3
+
+            //console.log((i % jigsaw.numCols));
+
             ptX = origin.x + (jigsaw.widthImg * (i % jigsaw.numCols));
             ptY = origin.y + (jigsaw.heightImg);
-            boxes[i] = kRect(ptX, ptY, jigsaw.widthImg, jigsaw.heightImg, "lightgrey", strokeWidth, boxLayer);
+
+            //for 9 piece puzzles
+            if (jigsaw.numPieces > 6 && i > 5) {
+                ptY = origin.y + (jigsaw.heightImg * 2);
+            }
+            boxes[i] = kRect(ptX, ptY, jigsaw.widthImg, jigsaw.heightImg, "lightgrey", strokeWidth, bgLayer);
         }
         boxes[i].coords = {left: ptX, right: ptX + jigsaw.widthImg, top: ptY, bottom: ptY + jigsaw.heightImg};
         boxes[i].pieceId = i;
@@ -96,9 +110,6 @@ function displayPieces() {
 
         x = positions[i][0];
         y = positions[i][1];
-
-//        x = Math.floor((Math.random() * 800) + 20);
-//        y = Math.floor((Math.random() * 470) + 20);
 
         var source = "img/" + jigsaw.name + "/" + jigsaw.name + "-" + (i + 1) + ".png";
         createImagePieces(x, y, i, source);
@@ -127,7 +138,7 @@ function initDrag(dragObj) {
         this.getY() < boundTop ? this.setY(boundTop) : "";
         this.getY() > boundBtm ? this.setY(boundBtm) : "";
 
-        boxLayer.draw();
+        pceLayer.draw();
     });
 
     //check the coords as the box is dragged, snap to as it nears the destination
@@ -182,7 +193,7 @@ function initDrag(dragObj) {
         //check for finish
         isFinished() ? celebrate() : "";
         //redraw()
-        boxLayer.draw();
+        pceLayer.draw();
     });
 }
 
@@ -224,13 +235,13 @@ function celebrate() {
 
     for (var i = 0; i < jigsaw.numPieces; i++) {
     }
-    boxLayer.draw();
+    pceLayer.draw();
     $.ionSound.play(jigsaw.sounds[0]);
 }
 
 function isFinished() {
     var count = 0;
-    var pieces = boxLayer.getChildren();
+    var pieces = pceLayer.getChildren();
     $.each(pieces, function(idx, piece) {
 
         if (piece.placed) {
@@ -280,12 +291,12 @@ function createImagePieces(posX, posY, pieceId, source) {
             x: posX,
             y: posY,
             image: imageObj,
-            width: 205,
-            height: 236,
+            width: jigsaw.widthImg,
+            height: jigsaw.heightImg,
             draggable: true
         });
-        boxLayer.add(image);
-        stage.add(boxLayer);
+        pceLayer.add(image);
+        stage.add(pceLayer);
 
         image.pieceId = pieceId;
         initDrag(image);
@@ -302,7 +313,7 @@ function createImagePieces(posX, posY, pieceId, source) {
         pieces[pieceId].position = pieces[pieceId].getX();
         $("#container").removeClass("loading");
 
-        testPiece();
+        test();
     };
     imageObj.src = source;
 
@@ -330,21 +341,7 @@ function initSounds() {
     });
 }
 
-function testPiece() {
 
-    var children = boxLayer.getChildren();
-
-    $.each(children, function(idx, child) {
-
-        child.placed = false;
-
-        child.on("mousedown", function() {
-
-            //console.log(this.pieceId + ": " + this.placed);
-
-        });
-    });
-}
 
 
 //create positions for the pieces, placing them in an object
@@ -352,18 +349,20 @@ function testPiece() {
 function createPositions() {
     var positions = [];
     var mgn = 60;
-    var spacing = (heightContainer - mgn) / (jigsaw.numPieces / 2);
+    var spacing = jigsaw.numPieces === 9 ? 115 : (heightContainer - mgn) / (jigsaw.numPieces / 2);
     var rightX = widthContainer - jigsaw.widthImg;
     var x = 0, y = 0;
 
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < jigsaw.numPieces; i++) {
 
-        if (i > 2) {
-            x = rightX;
-        } else {
+        if (i < jigsaw.numPieces / 2) {
             x = 0;
+        } else {
+            x = rightX;
+            spacing = jigsaw.numPieces === 9 ? 153 : (heightContainer - mgn) / (jigsaw.numPieces / 2);
         }
-        y = mgn + spacing * (i % (jigsaw.numPieces / 2));
+        y = mgn + spacing * Math.floor((i % (jigsaw.numPieces / 2)));
+
         positions.push([x, y]);
     }
     return shuffle(positions);
@@ -375,4 +374,29 @@ function shuffle(o) { //v1.0
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x)
         ;
     return o;
+}
+
+
+function test() {
+
+    var boxes = bgLayer.getChildren();
+
+    var pieces = pceLayer.getChildren();
+
+    // console.log(boxes);
+
+    $.each(boxes, function(idx, box) {
+
+        //console.log(box.pieceId);
+
+    });
+
+    boxes.on("mousedown", function() {
+        //console.log(this.pieceId);
+    });
+
+    pieces.on("mousedown", function() {
+        //console.log(this.pieceId);
+    });
+
 }
