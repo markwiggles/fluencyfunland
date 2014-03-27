@@ -19,6 +19,8 @@
         <div id="outer-wrapper">
             <header><img src="../img/ffl.png"/></header>
             <div id="content">
+                <div id="jigsaw-menu"></div>
+
                 <img id="back" src="../img/back.png"/><img id="refresh" src="../img/refresh.png"/>
                 <img id="background">
                <div id="container"></div>

@@ -14,6 +14,7 @@ var sensitivity = 50;
 var widthContainer;
 var heightContainer;
 
+//jigsaw object template
 var jigsaw = {name: "", numPieces: 0, numCols: 0, numRows: 0, widthImg: 0, heightImg: 0, sounds: []};
 
 var jig1 = {name: "jig1", numPieces: 6, numCols: 3, numRows: 2, widthImg: 205, heightImg: 236, sounds: ["sheep"]};
@@ -26,9 +27,64 @@ var jig5 = {name: "jig5", numPieces: 9, numCols: 3, numRows: 3, widthImg: 205, h
  */
 $(function() {
 
+    $("#jigsaw-menu")
+            .append($("<div>").attr("id", "puzzle")
+            .append($("<p>").html("6 piece puzzles")));
+
+    for (var i = 1; i <= 3; i++) {
+
+        var source = "img/" + "jig" + (i) + "/jig" + (i) + ".png";
+        var id = "jig" + (i);
+        $("#jigsaw-menu")
+                .append($("<img>")
+                .addClass("nav")
+                .attr("src", source)
+                .attr("id", id));
+    }
+    $("#jigsaw-menu")
+            .append($("<div>").attr("id", "puzzle")
+            .append($("<p>").html("9 piece puzzles")));
+    for (var i = 4; i <= 5; i++) {
+
+        var source = "img/" + "jig" + (i) + "/jig" + (i) + ".png";
+        var id = "jig" + (i);
+        $("#jigsaw-menu")
+                .append($("<img>")
+                .addClass("nav")
+                .attr("src", source)
+                .attr("id", id));
+    }
+    $("#back").on("mousedown", function() {
+        //hide the current elements
+        $("#background, #container, #back, #refresh").hide();
+        //show the menu
+        $("#jigsaw-menu").show();
+    });
+    
+    $("#refresh").on("mousedown", function() {
+        initJigsaw();
+    });
+    
+
+    //create navigation for menu
+    $(".nav").on("mousedown", function() {
+        
+        $("#jigsaw-menu").hide();
+        $("#background, #container, #back, #refresh").show();
+        
+        //assign the selected jigsaw
+        jigsaw = eval($(this).attr("id"));
+        initJigsaw();
+        
+        console.log("jname: " + jigsaw.name);
+    });
+
+});
+
+function initJigsaw() {
+    
     heightContainer = $("#container").height();
     widthContainer = $("#container").width();
-    jigsaw = jig5;
 
     initStage();
     initLayers();
@@ -38,15 +94,15 @@ $(function() {
     createBackgoundImage((jigsaw.widthImg * jigsaw.numCols), (jigsaw.heightImg * jigsaw.numRows));
     displayPieces();
 
-    test();
-
-    $("#back, #refresh").show();
-
     for (var i = 0; i < jigsaw.numPieces; i++) {
         boxes[i].full = false;
+        boxes[i].occupy = "none";
     }
-    //displayPosition(); //for testing
-});
+
+    //for testing
+    //test();
+    //displayPosition(); 
+}
 
 /** Function: find the origin (x,y) of the jigsaw drawing
  * @returns void
@@ -87,8 +143,6 @@ function createGrid() {
             boxes[i] = kRect(ptX, ptY, jigsaw.widthImg, jigsaw.heightImg, "lightgrey", strokeWidth, bgLayer);
         } else {//row2 & 3
 
-            //console.log((i % jigsaw.numCols));
-
             ptX = origin.x + (jigsaw.widthImg * (i % jigsaw.numCols));
             ptY = origin.y + (jigsaw.heightImg);
 
@@ -119,6 +173,21 @@ function displayPieces() {
 
 function initDrag(dragObj) {
 
+    dragObj.on("dragstart", function() {
+
+        this.setStroke("");
+        this.setStrokeWidth(0);
+
+        console.log("dragstart: " + currBox.full + "- " + currBox.occupy);
+
+        //if this piece was in current box
+        if (this.pieceId === currBox.occupy) {
+            console.log("to false");
+            currBox.full = false;
+            currBox.occupy = "";
+        }
+    });
+
     //assign the destination according to where the center of dragged is
     dragObj.on("dragmove", function() {
 
@@ -144,9 +213,6 @@ function initDrag(dragObj) {
     //check the coords as the box is dragged, snap to as it nears the destination
     dragObj.on("dragend", function() {
 
-
-        //console.log("box: " + currBox.pieceId + currBox.full);
-
         //the coords of the piece being dragged
         var x = this.getX();
         var y = this.getY();
@@ -162,9 +228,7 @@ function initDrag(dragObj) {
                 //snap the piece back, if it is left on top of another
                 if (this.getX() >= pieces[i].getX() - dist && this.getX() <= pieces[i].getX() + dist &&
                         this.getY() >= pieces[i].getY() - dist && this.getY() <= pieces[i].getY() + dist) {
-                    //console.log("get");
-                    this.setX(this.getX() + 70);
-                    this.setY(this.getY() + 70);
+                    rejectPiece(this);
                 }
             }
         }
@@ -172,12 +236,16 @@ function initDrag(dragObj) {
 
         if (isClose(this)) { //this dragged object
 
-            //set the x,y coords to the destination box
+            console.log("b4" + currBox.full);
+
+            //if defined and not full
             if (currBox !== "") {
+                //place in box
                 dragObj.setX(currBox.getX());
                 dragObj.setY(currBox.getY());
-
                 currBox.full = true;
+                currBox.occupy = this.pieceId;
+                console.log("aft" + currBox.full);
 
                 if (this.pieceId === currBox.pieceId) {
                     this.placed = true;
@@ -187,6 +255,8 @@ function initDrag(dragObj) {
                     this.setStroke("red");
                     this.setStrokeWidth(4);
                 }
+            } else {
+                //rejectPiece(this);
             }
         }
 
@@ -197,10 +267,14 @@ function initDrag(dragObj) {
     });
 }
 
+function rejectPiece(piece) {
+    piece.setX(piece.getX() + 20);
+    piece.setY(piece.getY() + 20);
+}
+
 function isClose(piece) {
 
     //get the coords of the current box, and compare against the piece being dragged
-
     if (!$.isEmptyObject(currBox)) {
         var posX = currBox.getX();
         var posY = currBox.getY();
@@ -269,8 +343,6 @@ function kRect(x, y, width, height, stroke, strokewidth, layer, drag) {
 }
 
 
-
-
 /**Function: creates the piece image and adds it to the layer
  * in the specified position
  * calls the initDrag function to initialise the dragging
@@ -322,8 +394,12 @@ function createImagePieces(posX, posY, pieceId, source) {
 
 function createBackgoundImage(width, height) {
 
+    var source = "img/" + jigsaw.name + "/" + jigsaw.name + "g.png";
+
+    console.log(source);
+
     $("#background")
-            .attr("src", "img/" + jigsaw.name + "/" + jigsaw.name + "g.png")
+            .attr("src", source)
             .css("left", origin.x)
             .css("top", origin.y)
             .css("width", width + "px")
@@ -341,11 +417,7 @@ function initSounds() {
     });
 }
 
-
-
-
 //create positions for the pieces, placing them in an object
-
 function createPositions() {
     var positions = [];
     var mgn = 60;
@@ -369,7 +441,6 @@ function createPositions() {
 }
 
 
-
 function shuffle(o) { //v1.0
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x)
         ;
@@ -386,17 +457,15 @@ function test() {
     // console.log(boxes);
 
     $.each(boxes, function(idx, box) {
-
         //console.log(box.pieceId);
-
     });
 
     boxes.on("mousedown", function() {
-        //console.log(this.pieceId);
+        console.log(this.full + ": " + this.occupy);
     });
 
     pieces.on("mousedown", function() {
-        //console.log(this.pieceId);
+        console.log("piece: " + this.pieceId);
     });
 
 }

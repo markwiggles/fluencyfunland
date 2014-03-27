@@ -18,12 +18,31 @@ html {
 header img {
     margin: 0 auto;
     width: 100%;
-    height: 0;
-    display:none;
 }
 #content {
     position: relative;
 }
+#jigsaw-menu {
+    width: 1024px;
+    height: 680px;
+    background-color: white;
+    text-align: center;
+}
+#jigsaw-menu img {
+    width: 250px;
+    margin: 0px 35px 10px 35px;
+}
+#jigsaw-menu p {
+    margin:0;
+    font-family: "Comic Sans MS", cursive, sans-serif; 
+    font-size: 50px;
+}
+#puzzle {
+    padding-top: 30px;
+    padding-bottom: 10px;
+    color:red;
+}
+
 
 #container {
     border:solid 1px #ccc;
@@ -31,6 +50,7 @@ header img {
     width:1024px;
     height: 680px;
     background-color: white;
+    display:none;
 }
 
 .loading {
@@ -41,6 +61,8 @@ header img {
 
 #background {
     position:absolute;
+    opacity: 0.8;
+    display:none;
 }
 
 #back, #refresh {
