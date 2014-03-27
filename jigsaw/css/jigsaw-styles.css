@@ -21,6 +21,9 @@ header img {
     height: 0;
     display:none;
 }
+#content {
+    position: relative;
+}
 
 #container {
     border:solid 1px #ccc;
@@ -34,4 +37,50 @@ header img {
     background-image: url('../../img/ajax-loader.gif');
     background-repeat: no-repeat;
     background-position: center;
+}
+
+#background {
+    position:absolute;
+}
+
+#back, #refresh {
+    position: absolute;
+    top: 5px;
+    height: 50px;
+    width: auto;
+    z-index: 99;
+    display: none;
+}
+#back {
+    left: 5px;
+}
+#refresh {
+    left: 960px;
+}
+
+#back:hover, #refresh:hover {
+    -webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
+    filter: url(shadow.svg#drop-shadow);
+    /* for IE 8 & 9 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+    /* For IE 5.5 - 7 */
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+    cursor: pointer;
+}
+#back:active, #refresh:active {
+    opacity: 0.7;
+    cursor: pointer;
+}
+.nav:hover {
+-webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
+    filter: url(shadow.svg#drop-shadow);
+    /* for IE 8 & 9 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+    /* For IE 5.5 - 7 */
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
+    cursor: pointer;
+}
+.nav:active {
+    opacity: 0.7;
+    cursor: pointer;
 }
