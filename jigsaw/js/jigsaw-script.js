@@ -1,88 +1,71 @@
 
+/* Globals */
 var stage;
 var bgLayer;
 var pceLayer;
 
-var jigsaw = {};
-var origin = {};
-var boxes = {};
-var currBox = {};
-var pieces = {};
+var origin = {}; //where the grid starts
+var boxes = {}; //the grid where the pieces go
+var currBox = {}; // where the center of the current dragged peice is
+var pieces = {}; // all the piece data including the Kinetic image
 
+
+//the snap into place parameter - how far the piece is away
 var sensitivity = 50;
 
+//our dimensions
 var widthContainer;
 var heightContainer;
 
 //jigsaw object template
 var jigsaw = {name: "", numPieces: 0, numCols: 0, numRows: 0, widthImg: 0, heightImg: 0, sounds: []};
 
-var jig1 = {name: "jig1", numPieces: 6, numCols: 3, numRows: 2, widthImg: 205, heightImg: 236, sounds: ["sheep"]};
-var jig2 = {name: "jig2", numPieces: 6, numCols: 3, numRows: 2, widthImg: 205, heightImg: 236, sounds: ["bus"]};
-var jig3 = {name: "jig3", numPieces: 6, numCols: 3, numRows: 2, widthImg: 205, heightImg: 236, sounds: ["bed"]};
-var jig4 = {name: "jig4", numPieces: 9, numCols: 3, numRows: 3, widthImg: 205, heightImg: 158, sounds: ["seagull"]};
-var jig5 = {name: "jig5", numPieces: 9, numCols: 3, numRows: 3, widthImg: 205, heightImg: 158, sounds: ["monkeys"]};
+//the data for the jigsaws
+var jig1 = {name: "jig1", numPieces: 6, numCols: 3, numRows: 2, widthImg: 200, heightImg: 236, sounds: ["sheep"]};
+var jig2 = {name: "jig2", numPieces: 6, numCols: 3, numRows: 2, widthImg: 200, heightImg: 236, sounds: ["bus"]};
+var jig3 = {name: "jig3", numPieces: 6, numCols: 3, numRows: 2, widthImg: 200, heightImg: 236, sounds: ["bed"]};
+var jig4 = {name: "jig4", numPieces: 9, numCols: 3, numRows: 3, widthImg: 200, heightImg: 158, sounds: ["seagull"]};
+var jig5 = {name: "jig5", numPieces: 9, numCols: 3, numRows: 3, widthImg: 200, heightImg: 158, sounds: ["monkeys"]};
+
+var messages = ["well done", "you did it", "all finished", "awesome job", "too cool", "excellent"]
 
 /**Function: runs when page loads
  */
 $(function() {
 
-    $("#jigsaw-menu")
-            .append($("<div>").attr("id", "puzzle")
-            .append($("<p>").html("6 piece puzzles")));
+    initNavigation();
 
-    for (var i = 1; i <= 3; i++) {
-
-        var source = "img/" + "jig" + (i) + "/jig" + (i) + ".png";
-        var id = "jig" + (i);
-        $("#jigsaw-menu")
-                .append($("<img>")
-                .addClass("nav")
-                .attr("src", source)
-                .attr("id", id));
-    }
-    $("#jigsaw-menu")
-            .append($("<div>").attr("id", "puzzle")
-            .append($("<p>").html("9 piece puzzles")));
-    for (var i = 4; i <= 5; i++) {
-
-        var source = "img/" + "jig" + (i) + "/jig" + (i) + ".png";
-        var id = "jig" + (i);
-        $("#jigsaw-menu")
-                .append($("<img>")
-                .addClass("nav")
-                .attr("src", source)
-                .attr("id", id));
-    }
-    $("#back").on("mousedown", function() {
-        //hide the current elements
-        $("#background, #container, #back, #refresh").hide();
-        //show the menu
-        $("#jigsaw-menu").show();
-    });
-    
-    $("#refresh").on("mousedown", function() {
-        initJigsaw();
-    });
-    
-
-    //create navigation for menu
-    $(".nav").on("mousedown", function() {
-        
-        $("#jigsaw-menu").hide();
-        $("#background, #container, #back, #refresh").show();
-        
-        //assign the selected jigsaw
-        jigsaw = eval($(this).attr("id"));
-        initJigsaw();
-        
-        console.log("jname: " + jigsaw.name);
-    });
-
+    /* some functions if we need to test anything */
+    //displayPosition(); 
+    //getgetLayerInfo()
 });
 
+function initNavigation() {
+
+    //go back to the menu, hiding the current jigsaw etc
+    $("#back").on("mousedown", function() {
+        $("#background, #container, #back, #refresh").hide();
+        $("#jigsaw-menu").fadeIn(500);
+    });
+
+    //re-load the jigsaw
+    $("#refresh").on("mousedown", function() {
+        $("#background, #container, #back, #refresh").fadeOut(500);
+        initJigsaw();
+        $("#background, #container, #back, #refresh").fadeIn(500);
+    });
+
+    //assign the selected jigsaw, hide the menu, and show the puzzle etc
+    $(".nav").on("mousedown", function() {
+        jigsaw = eval($(this).attr("id"));
+        initJigsaw();
+        $("#jigsaw-menu").hide();
+        $("#background, #container, #back, #refresh").fadeIn(500);
+    });
+}
+
 function initJigsaw() {
-    
+
     heightContainer = $("#container").height();
     widthContainer = $("#container").width();
 
@@ -95,8 +78,7 @@ function initJigsaw() {
     displayPieces();
 
     for (var i = 0; i < jigsaw.numPieces; i++) {
-        boxes[i].full = false;
-        boxes[i].occupy = "none";
+        boxes[i].occupy = "empty";
     }
 
     //for testing
@@ -175,16 +157,15 @@ function initDrag(dragObj) {
 
     dragObj.on("dragstart", function() {
 
-        this.setStroke("");
-        this.setStrokeWidth(0);
+        //assign the piece to be in the current box
+        isCenterInBox(dragObj);
 
-        console.log("dragstart: " + currBox.full + "- " + currBox.occupy);
+        this.setStroke("black");
+        this.setStrokeWidth(3);
 
         //if this piece was in current box
         if (this.pieceId === currBox.occupy) {
-            console.log("to false");
-            currBox.full = false;
-            currBox.occupy = "";
+            currBox.occupy = "empty";
         }
     });
 
@@ -233,22 +214,20 @@ function initDrag(dragObj) {
             }
         }
 
-
+        //if this piece is close to the current box origin
         if (isClose(this)) { //this dragged object
 
-            console.log("b4" + currBox.full);
 
-            //if defined and not full
-            if (currBox !== "") {
+            //if not full
+            if (currBox.occupy === "empty") {
                 //place in box
                 dragObj.setX(currBox.getX());
                 dragObj.setY(currBox.getY());
-                currBox.full = true;
                 currBox.occupy = this.pieceId;
-                console.log("aft" + currBox.full);
 
                 if (this.pieceId === currBox.pieceId) {
                     this.placed = true;
+                    this.setDraggable(false);
                     this.setStroke("");
                     this.setStrokeWidth(0);
                 } else {
@@ -256,7 +235,7 @@ function initDrag(dragObj) {
                     this.setStrokeWidth(4);
                 }
             } else {
-                //rejectPiece(this);
+                rejectPiece(this);
             }
         }
 
@@ -293,10 +272,10 @@ function isClose(piece) {
  * @param {drag object} dragShape
  * @returns void
  */
-function isCenterInBox(dragShape) {
+function isCenterInBox(dragObj) {
     //get the center of the shape
-    var x = dragShape.getX() + dragShape.width() / 2;
-    var y = dragShape.getY() + dragShape.height() / 2;
+    var x = dragObj.getX() + dragObj.width() / 2;
+    var y = dragObj.getY() + dragObj.height() / 2;
 
     for (var i = 0; i < jigsaw.numPieces; i++) {
         if ((x >= boxes[i].coords.left && x <= boxes[i].coords.right) && (y >= boxes[i].coords.top && y <= boxes[i].coords.bottom)) {
@@ -311,6 +290,7 @@ function celebrate() {
     }
     pceLayer.draw();
     $.ionSound.play(jigsaw.sounds[0]);
+    drawText();
 }
 
 function isFinished() {
@@ -327,15 +307,14 @@ function isFinished() {
 
 
 // build the specified KineticJS Rectangle and add it to the stage
-function kRect(x, y, width, height, stroke, strokewidth, layer, drag) {
+function kRect(x, y, width, height, stroke, strokewidth, layer) {
     var rect = new Kinetic.Rect({
         x: x,
         y: y,
         width: width,
         height: height,
         stroke: stroke,
-        strokeWidth: strokewidth,
-        draggable: drag
+        strokeWidth: strokewidth
     });
     layer.add(rect);
     stage.draw();
@@ -365,7 +344,9 @@ function createImagePieces(posX, posY, pieceId, source) {
             image: imageObj,
             width: jigsaw.widthImg,
             height: jigsaw.heightImg,
-            draggable: true
+            draggable: true,
+            stroke: "black",
+            strokeWidth: 3,
         });
         pceLayer.add(image);
         stage.add(pceLayer);
@@ -385,7 +366,6 @@ function createImagePieces(posX, posY, pieceId, source) {
         pieces[pieceId].position = pieces[pieceId].getX();
         $("#container").removeClass("loading");
 
-        test();
     };
     imageObj.src = source;
 
@@ -395,8 +375,6 @@ function createImagePieces(posX, posY, pieceId, source) {
 function createBackgoundImage(width, height) {
 
     var source = "img/" + jigsaw.name + "/" + jigsaw.name + "g.png";
-
-    console.log(source);
 
     $("#background")
             .attr("src", source)
@@ -440,32 +418,89 @@ function createPositions() {
     return shuffle(positions);
 }
 
+//textObj.ctx.shadowColor = "darkgrey";
+//        textObj.ctx.shadowBlur = 3;
+//        textObj.ctx.shadowOffsetX = 2;
+//        textObj.ctx.shadowOffsetY = 2;
 
-function shuffle(o) { //v1.0
-    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x)
+function drawText() {
+    
+    var message = messages[Math.floor((Math.random()*6))];
+
+    var text = new Kinetic.Text({
+        x: widthContainer / 2,
+        y: 200,
+        text: message,
+        fontSize: 70,
+        fontStyle: "bold",
+        fontFamily: 'Comic Sans MS',
+        shadowColor: "darkgrey",
+        shadowOffsetX: 2,
+        shadowOffsetY: 2,
+        stroke: "black",
+        strokeWidth: 1,
+        fill: 'white'
+    });
+
+    text.offsetX(text.width() / 2);
+
+    pceLayer.add(text);
+    stage.draw();
+
+}//end drawText
+
+
+
+function shuffle(o) {
+    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i),
+            x = o[--i], o[i] = o[j], o[j] = x)
         ;
     return o;
 }
 
 
-function test() {
+function getLayerInfo() {
 
     var boxes = bgLayer.getChildren();
-
     var pieces = pceLayer.getChildren();
-
-    // console.log(boxes);
 
     $.each(boxes, function(idx, box) {
         //console.log(box.pieceId);
     });
-
     boxes.on("mousedown", function() {
-        console.log(this.full + ": " + this.occupy);
+        console.log("box: " + this.occupy);
     });
-
     pieces.on("mousedown", function() {
         console.log("piece: " + this.pieceId);
     });
-
 }
+
+//function drawText(text, size, posY) {
+//
+//    $("#showTextMsg").hide();
+//
+//    if (textObj.ctx && typeof(text) !== "undefined" && text !== null) {
+//        text = text.replace("_", " ");
+//
+//        clearCanvas(textObj);
+//
+//        //write the name
+//        textObj.ctx.font = "bold " + size + "px Comic Sans MS";
+//        textObj.ctx.textAlign = "center";
+//        textObj.ctx.shadowColor = "darkgrey";
+//        textObj.ctx.shadowBlur = 3;
+//        textObj.ctx.shadowOffsetX = 2;
+//        textObj.ctx.shadowOffsetY = 2;
+//        textObj.ctx.strokeStyle = 'black';
+//        textObj.ctx.lineWidth = 3;
+//        textObj.ctx.strokeText(text, 400, posY); //posY: 80 for objects, 120 for theme 
+//
+////        var width = textObj.ctx.measureText(text).width;
+////        textObj.ctx.fillStyle = 'navy';
+////        /// draw background rect assuming height of font
+////        textObj.ctx.fillRect(0, 0, width + 20, 100);
+//        textObj.ctx.fillStyle = "white";
+//        textObj.ctx.fillText(text, 400, posY);
+//
+//    }//end if ctx
+//}//end drawText
