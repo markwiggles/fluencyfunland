@@ -33,7 +33,7 @@
             <div id="content">
                 <div id="color-menu">
                     <img id="color-header" src="img/header.png"/>
-                    <img id="" src="img/menu.png"/>
+                    <img id="book" src="img/menu.png"/>
                     <img class="color-thumb" id="flowerthumb" src="img/flowerthumb.png"/>
                     <img class="color-thumb" id="rocketthumb" src="img/rocketthumb.png"/>
                     <img class="color-thumb" id="dinothumb" src="img/dinothumb.png"/>

@@ -1,8 +1,8 @@
 //soccer drawing
 var soccer = {}; //the drawing object
-soccer.x = 0;
+soccer.x = -40;
 soccer.y = 0;
-soccer.scale = 1;
+soccer.scale = 0.85;
 soccer.shapes = 15;
 soccer.layer0 = ["shape1", "shape2","shape3"];
 soccer.layer2 = [];//as per drawColor 

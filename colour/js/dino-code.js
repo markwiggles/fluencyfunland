@@ -1,8 +1,8 @@
 //dino drawing
 var dino = {}; //the drawing object
-dino.x = 0;
+dino.x = -80;
 dino.y = -30;
-dino.scale = .95;
+dino.scale = .80;
 dino.shapes = 21;
 dino.layer0 = ["shape1"];
 dino.layer2 = ["shape17","shape21"]; //as per drawColor 

@@ -22,14 +22,16 @@ header {
 
 #content {
     width: 1024px;
-    height: 768px;
+    height: 680px;
     position: relative;
     margin: auto;
 }
-
+#book {
+    height: 680px;
+}
 #container {
     width: 774px;
-    height: 768px;
+    height: 680px;
     margin: 0;
     float: left;
     background-color: white;
@@ -37,7 +39,8 @@ header {
 #color-header {
     position: absolute;
     top: 0;
-    left: 300px;   
+    left: 280px;
+    height: 105px;
 }
 .color-thumb {
     position: absolute;
@@ -58,24 +61,24 @@ header {
 }
 
 #flowerthumb {
-    top: 190px;
-    left: 300px;
+    top: 160px;
+    left: 280px;
 }
 #rocketthumb {
-    top: 420px;
-    left: 365px;
+    top: 380px;
+    left: 300px;
 }
 #cowboythumb {
-    top: 190px;
-    left: 600px;
+    top: 160px;
+    left: 520px;
 }
 #dinothumb {
-    top: 420px;
-    left: 670px;
+    top: 380px;
+    left: 580px;
 }
 #soccerthumb {
-    top: 420px;
-    left: 170px;
+    top: 380px;
+    left: 130px;
 }
 
 #colors {

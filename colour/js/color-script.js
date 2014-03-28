@@ -23,7 +23,8 @@ $(function() {
     initLayers();
     initDrawingNavigation();
 
-    //displayPosition(); used in testing
+    /*used in testing*/
+    //displayPosition(); 
 
 });
 

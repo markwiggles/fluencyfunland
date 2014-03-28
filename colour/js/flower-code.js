@@ -1,8 +1,8 @@
 //flower drawing
 var flower = {}; //the drawing object
-flower.x = 0;
+flower.x = -40;
 flower.y = 0;
-flower.scale = 1;
+flower.scale = 0.85;
 flower.shapes = 18;
 flower.layer0 = ["shape1"];
 flower.layer2 = ["shape16"];//as per drawColor 

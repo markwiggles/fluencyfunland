@@ -1,8 +1,8 @@
 //rocket drawing
 var rocket = {}; //the drawing object
-rocket.x = 0;
+rocket.x = -40;
 rocket.y = 0;
-rocket.scale = 1;
+rocket.scale = 0.85;
 rocket.shapes = 34;
 rocket.layer0 = ["shape1","shape2"];
 rocket.layer2 = ["shape30"]; //as per drawColor

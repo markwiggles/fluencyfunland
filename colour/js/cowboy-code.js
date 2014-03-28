@@ -1,8 +1,8 @@
 //cowboy drawing
 var cowboy = {}; //the drawing object
-cowboy.x = 0;
+cowboy.x = -40;
 cowboy.y = 0;
-cowboy.scale = 1;
+cowboy.scale = 0.85;
 cowboy.shapes = 22;
 cowboy.layer0 = ["shape1", "shape2"];
 cowboy.layer2 = ["shape19", "shape20"];//as per drawColor 
