@@ -27,7 +27,8 @@ var jig3 = {name: "jig3", numPieces: 6, numCols: 3, numRows: 2, widthImg: 200, h
 var jig4 = {name: "jig4", numPieces: 9, numCols: 3, numRows: 3, widthImg: 200, heightImg: 158, sounds: ["seagull"]};
 var jig5 = {name: "jig5", numPieces: 9, numCols: 3, numRows: 3, widthImg: 200, heightImg: 158, sounds: ["monkeys"]};
 
-var messages = ["well done", "you did it", "all finished", "awesome job", "too cool", "excellent"]
+//completion messages - shown randomly
+var messages = ["well done", "you did it", "all finished", "awesome job", "too cool", "excellent"];
 
 /**Function: runs when page loads
  */
@@ -68,13 +69,12 @@ function initJigsaw() {
 
     heightContainer = $("#container").height();
     widthContainer = $("#container").width();
-
+    findOrigin();
+    createBackgoundImage((jigsaw.widthImg * jigsaw.numCols), (jigsaw.heightImg * jigsaw.numRows));
     initStage();
     initLayers();
     initSounds();
-    findOrigin();
     createGrid();
-    createBackgoundImage((jigsaw.widthImg * jigsaw.numCols), (jigsaw.heightImg * jigsaw.numRows));
     displayPieces();
 
     for (var i = 0; i < jigsaw.numPieces; i++) {
@@ -218,13 +218,13 @@ function initDrag(dragObj) {
         if (isClose(this)) { //this dragged object
 
 
-            //if not full
+            //if not already full, place the piece in the box
             if (currBox.occupy === "empty") {
-                //place in box
                 dragObj.setX(currBox.getX());
                 dragObj.setY(currBox.getY());
                 currBox.occupy = this.pieceId;
 
+                //if it is the right piece
                 if (this.pieceId === currBox.pieceId) {
                     this.placed = true;
                     this.setDraggable(false);
@@ -290,7 +290,8 @@ function celebrate() {
     }
     pceLayer.draw();
     $.ionSound.play(jigsaw.sounds[0]);
-    drawText();
+    var message = messages[Math.floor((Math.random() * 6))];
+    drawText(widthContainer / 2, 200, 70, message);
 }
 
 function isFinished() {
@@ -398,20 +399,26 @@ function initSounds() {
 //create positions for the pieces, placing them in an object
 function createPositions() {
     var positions = [];
-    var mgn = 60;
-    var spacing = jigsaw.numPieces === 9 ? 115 : (heightContainer - mgn) / (jigsaw.numPieces / 2);
-    var rightX = widthContainer - jigsaw.widthImg;
+    var mgnTop = 60;
+    var mgnBtm = 20;
+    var mgnSide = 3;
+
+    //spacing for 9 piece puzzles
+    var leftSpacing = 115;
+    var rightSpacing = 153;
+    var spacing = jigsaw.numPieces === 9 ? leftSpacing : (heightContainer - mgnTop) / (jigsaw.numPieces / 2) - mgnBtm;
+    var rghtX = widthContainer - jigsaw.widthImg;
     var x = 0, y = 0;
 
     for (var i = 0; i < jigsaw.numPieces; i++) {
 
         if (i < jigsaw.numPieces / 2) {
-            x = 0;
+            x = mgnSide;
         } else {
-            x = rightX;
-            spacing = jigsaw.numPieces === 9 ? 153 : (heightContainer - mgn) / (jigsaw.numPieces / 2);
+            x = rghtX - mgnSide;
+            spacing = jigsaw.numPieces === 9 ? rightSpacing : (heightContainer - mgnTop) / (jigsaw.numPieces / 2) - mgnBtm;
         }
-        y = mgn + spacing * Math.floor((i % (jigsaw.numPieces / 2)));
+        y = mgnTop + spacing * Math.floor((i % (jigsaw.numPieces / 2)));
 
         positions.push([x, y]);
     }
@@ -423,15 +430,13 @@ function createPositions() {
 //        textObj.ctx.shadowOffsetX = 2;
 //        textObj.ctx.shadowOffsetY = 2;
 
-function drawText() {
-    
-    var message = messages[Math.floor((Math.random()*6))];
+function drawText(posX, posY, size, message) {
 
     var text = new Kinetic.Text({
-        x: widthContainer / 2,
-        y: 200,
+        x: posX,
+        y: posY,
         text: message,
-        fontSize: 70,
+        fontSize: size,
         fontStyle: "bold",
         fontFamily: 'Comic Sans MS',
         shadowColor: "darkgrey",
@@ -474,33 +479,3 @@ function getLayerInfo() {
         console.log("piece: " + this.pieceId);
     });
 }
-
-//function drawText(text, size, posY) {
-//
-//    $("#showTextMsg").hide();
-//
-//    if (textObj.ctx && typeof(text) !== "undefined" && text !== null) {
-//        text = text.replace("_", " ");
-//
-//        clearCanvas(textObj);
-//
-//        //write the name
-//        textObj.ctx.font = "bold " + size + "px Comic Sans MS";
-//        textObj.ctx.textAlign = "center";
-//        textObj.ctx.shadowColor = "darkgrey";
-//        textObj.ctx.shadowBlur = 3;
-//        textObj.ctx.shadowOffsetX = 2;
-//        textObj.ctx.shadowOffsetY = 2;
-//        textObj.ctx.strokeStyle = 'black';
-//        textObj.ctx.lineWidth = 3;
-//        textObj.ctx.strokeText(text, 400, posY); //posY: 80 for objects, 120 for theme 
-//
-////        var width = textObj.ctx.measureText(text).width;
-////        textObj.ctx.fillStyle = 'navy';
-////        /// draw background rect assuming height of font
-////        textObj.ctx.fillRect(0, 0, width + 20, 100);
-//        textObj.ctx.fillStyle = "white";
-//        textObj.ctx.fillText(text, 400, posY);
-//
-//    }//end if ctx
-//}//end drawText
