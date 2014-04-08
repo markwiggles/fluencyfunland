@@ -1,12 +1,12 @@
 /**Function to display (to console) the coords of the mouse when clicked
  * @returns void
  */
-function displayPosition() {
-    $("#container").mousedown(function(e) {
+function displayPosition(elementId) {
+    $("#"+ elementId).mousedown(function(e) {
         var pos = findPos(this);
         x = e.pageX - pos.x;
         y = e.pageY - pos.y;
-        var coordinateDisplay = "x=" + x + ", y=" + y;
+        var coordinateDisplay = x + " , " + y;
         console.log(coordinateDisplay);
     });
 }

@@ -28,7 +28,7 @@ var jig4 = {name: "jig4", numPieces: 9, numCols: 3, numRows: 3, widthImg: 200, h
 var jig5 = {name: "jig5", numPieces: 9, numCols: 3, numRows: 3, widthImg: 200, heightImg: 158, sounds: ["monkeys"]};
 
 //completion messages - shown randomly
-var messages = ["well done", "you did it", "all finished", "awesome job", "too cool", "excellent"];
+var messages = ["well done", "you did it", "all finished", "awesome job", "too cool", "excellent", "great work", "you are the best", "you are smart"];
 
 /**Function: runs when page loads
  */
@@ -82,7 +82,7 @@ function initJigsaw() {
     }
 
     //for testing
-    //test();
+    //getTestInfo();
     //displayPosition(); 
 }
 
@@ -152,8 +152,8 @@ function displayPieces() {
     }
 }
 
-
 function initDrag(dragObj) {
+
 
     dragObj.on("dragstart", function() {
 
@@ -166,11 +166,15 @@ function initDrag(dragObj) {
         //if this piece was in current box
         if (this.pieceId === currBox.occupy) {
             currBox.occupy = "empty";
+            this.placed = false;
         }
     });
 
     //assign the destination according to where the center of dragged is
     dragObj.on("dragmove", function() {
+
+        document.body.style.cursor = "move";
+        this.moveToTop();
 
         //assign the piece to be in the current box
         isCenterInBox(this);
@@ -193,6 +197,8 @@ function initDrag(dragObj) {
 
     //check the coords as the box is dragged, snap to as it nears the destination
     dragObj.on("dragend", function() {
+
+        document.body.style.cursor = "auto";
 
         //the coords of the piece being dragged
         var x = this.getX();
@@ -223,10 +229,11 @@ function initDrag(dragObj) {
                 dragObj.setX(currBox.getX());
                 dragObj.setY(currBox.getY());
                 currBox.occupy = this.pieceId;
+                this.placed = true;
 
-                //if it is the right piece
+                //if it is the right piece for the nox
                 if (this.pieceId === currBox.pieceId) {
-                    this.placed = true;
+                    this.correct = true;
                     this.setDraggable(false);
                     this.setStroke("");
                     this.setStrokeWidth(0);
@@ -285,12 +292,9 @@ function isCenterInBox(dragObj) {
 }
 
 function celebrate() {
-
-    for (var i = 0; i < jigsaw.numPieces; i++) {
-    }
     pceLayer.draw();
     $.ionSound.play(jigsaw.sounds[0]);
-    var message = messages[Math.floor((Math.random() * 6))];
+    var message = messages[Math.floor((Math.random() * messages.length))];
     drawText(widthContainer / 2, 200, 70, message);
 }
 
@@ -298,8 +302,7 @@ function isFinished() {
     var count = 0;
     var pieces = pceLayer.getChildren();
     $.each(pieces, function(idx, piece) {
-
-        if (piece.placed) {
+        if (piece.correct) {
             count++;
         }
     });
@@ -355,10 +358,12 @@ function createImagePieces(posX, posY, pieceId, source) {
         image.pieceId = pieceId;
         initDrag(image);
 
-        // add cursor styling and move pices to the top
+        // add cursor styling and move pieces to the top
         image.on('touchstart mouseover', function() {
-            document.body.style.cursor = 'pointer';
-            this.moveToTop();
+            if (this.placed !== true) {
+                document.body.style.cursor = 'pointer';
+                this.moveToTop();
+            }
         });
         image.on('mouseout', function() {
             document.body.style.cursor = 'default';
@@ -367,9 +372,22 @@ function createImagePieces(posX, posY, pieceId, source) {
         pieces[pieceId].position = pieces[pieceId].getX();
         $("#container").removeClass("loading");
 
+        //change the cursor on mouse over
+        image.on("mouseover", function() {
+            if (this.placed !== true)
+                document.body.style.cursor = "pointer";
+        });
     };
     imageObj.src = source;
+}
 
+function initMouseOver() {
+
+    var pieces = pceLayer.getChildren();
+    pieces.on("mouseover", function(idx, piece) {
+        if (piece.placed !== true)
+            document.body.style.cursor = "pointer";
+    });
 
 }
 
@@ -464,10 +482,9 @@ function shuffle(o) {
 }
 
 
-function getLayerInfo() {
+function getTestInfo() {
 
     var boxes = bgLayer.getChildren();
-    var pieces = pceLayer.getChildren();
 
     $.each(boxes, function(idx, box) {
         //console.log(box.pieceId);
@@ -475,7 +492,7 @@ function getLayerInfo() {
     boxes.on("mousedown", function() {
         console.log("box: " + this.occupy);
     });
-    pieces.on("mousedown", function() {
-        console.log("piece: " + this.pieceId);
-    });
+
+    var pieces = pceLayer.getChildren();
+    console.log(pieces);
 }

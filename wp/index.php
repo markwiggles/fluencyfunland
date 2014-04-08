@@ -6,10 +6,6 @@
     <head>
         <meta charset="utf-8" />
         <title>Word and Pictures</title>
-
-        <script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
-        <script type="text/javascript" src="../js/ion.sound.min.js"></script>
-        <script type="text/javascript" src="js/wp-script.js"></script>
         <link rel="stylesheet" href="css/wp-styles.css"/>
     </head>
     <body>
@@ -27,5 +23,8 @@
                 <div id="col2"></div>
             </div>
         </div>
+        <script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="../js/ion.sound.min.js"></script>
+        <script type="text/javascript" src="js/wp-script.js"></script>
     </body>
 </html>
