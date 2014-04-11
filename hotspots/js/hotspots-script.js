@@ -11,15 +11,14 @@ $(function() {
 
     initStage();
     initLayers();
-    initImages();
-    initObjects();
-    initSounds();
 
-    displayPosition("hotspots-layout");
+
+    //displayPosition("hotspots-layout");
 });
 
 
 function initImages() {
+
     $.each(hotspot.objects, function(idx, object) {
         drawImage(object.name);
     });
@@ -27,7 +26,6 @@ function initImages() {
 
 function initObjects() {
 
-    console.log("init");
 
     //initially show the normal image
     $(".objGlow").hide();
@@ -174,7 +172,7 @@ function createTween(objectName) {
         onFinish: function() {
 
             //show text for the object
-            drawText(512, 200, 60, objectName);
+            drawText(512, 20, 60, objectName);
             $.ionSound.play(objectName);
 
             //initiate event to remove large image on click

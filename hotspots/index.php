@@ -18,17 +18,14 @@
             <div id="content">
                <div id ="dark-bg"></div>
                 <div id="hotspots-menu">
-                    <p id="choose">Find some...</p>
+                    <p id="choose">Hotspots</p>
                 </div>
                 
-                <div id="hotspots-layout">
-                    
-                    <img id="back" src="../img/back.png"/><img id="refresh" src="../img/refresh.png"/>
-                    <img id="background"/>
+                <div id="hotspots-layout">                  
+                    <img id="back" src="../img/back.png"/><img id="refresh" src="../img/refresh.png"/>                  
                 </div>
-                <div id="container">
-
-                </div>
+                <div id="container"></div>
+                
             </div>
         </div>
 

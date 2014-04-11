@@ -15,9 +15,9 @@ farm.positions = [
     {x: 420, y: 500},
     {x: 700, y: 440},
     {x: 800, y: 300},
-    {x: 0, y: 360},
+    {x: 20, y: 340},
     {x: 600, y: 300},
-    {x: 280, y: 520},
+    {x: 280, y: 480},
     {x: 700, y: 300}
 ];
 
@@ -33,25 +33,34 @@ farm.objects = {
     kitten: {name: "kitten", scale: 0.5},
     rabbit: {name: "rabbit", scale: 0.3}
 };
-var underwater = {name: "underwater", path: "img/underwater/"};
-underwater.objects = {
-    turtle: {name: "turtle", scale: 1},
-    frog: {name: "frog", scale: 1}
+
+var park = {name: "park", path: "img/park/"};
+
+park.positions = [
+    {x: 820, y: 520},
+    {x: 320, y: 230},
+    {x: 180, y: 520},
+    {x: 500, y: 300},
+    {x: 200, y: 240},
+    {x: 500, y: 500}
+];
+
+park.objects = {
+    ball: {name: "ball", scale: 1.1},
+    bicycle: {name: "bicycle", scale: 1.3},
+    dog: {name: "dog", scale: 1.1},
+    football: {name: "football", scale: 0.6},
+    picnic: {name: "picnic", scale: 1.7},
+    running: {name: "running", scale: 1.7},
+    fountain: {name: "fountain", scale: 1.6, x: 10, y: 250},
+    slide: {name: "slide", scale: 3, x: 700, y: 220},
+    swings: {name: "swings", scale: 3, x: 830, y: 170}
 };
 
-//assign object
-hotspot = farm;
 
-initBackground(hotspot);
-$("#background").show();
-initPositions();
-drawObjects();
-$("#dark-bg").fadeIn(2000);
+//display hotspots menu
+getPacks();
 
-
-function initBackground(hotspot) {
-    $("#background").attr("src", hotspot.path + "background.png");
-}
 
 /** Function
  * 
@@ -63,8 +72,10 @@ function initPositions() {
 
     var i = 0;
     $.each(hotspot.objects, function(idx, object) {
-        object.x = hotspot.positions[i].x;
-        object.y = hotspot.positions[i].y;
+        if (idx !== "swings" && idx !== "slide" && idx !== "fountain") {
+            object.x = hotspot.positions[i].x;
+            object.y = hotspot.positions[i].y;
+        }
         i++;
     });
 
@@ -72,19 +83,20 @@ function initPositions() {
 
 function drawObjects() {
 
+    //remove previous objects
+    $("#hotspots-layout .objects").remove();
+
     $.each(hotspot.objects, function(idx, object) {
 
-        //adjust the image height
+        //adjust the image height so the objects look realistic
         var divHt = 150 * object.scale;
         var divWd = 150 * object.scale;
 
         //adjust the perspective size according to the y coord
-        var divHt = divHt * object.y / 680 * 1.5;
-        var divWd = divWd * object.y / 680 * 1.5;
-        // * object.y/680 * 2;
+        var divHt = Math.round(divHt * object.y / 680 * 1.5);
+        var divWd = Math.round(divWd * object.y / 680 * 1.5);
 
-
-        //adjust coords for smaller dimaensions than original div
+        //adjust coords for smaller dimensions than original div
         var x = object.x + (150 - divWd);
         var y = object.y + (150 - divHt);
         var zIndex = Math.round(y);
@@ -94,7 +106,7 @@ function drawObjects() {
                 .css({height: divHt, width: divWd})
                 .attr("id", object.name)
                 .css({left: x, top: y})
-                .css("zIndex",zIndex)
+                .css("zIndex", zIndex)
                 .append($("<img>")
                 .attr("src", hotspot.path + object.name + "_s.png")
                 .addClass("objImage")
@@ -113,3 +125,108 @@ function shuffle(o) {
         ;
     return o;
 }
+
+function getPacks() {
+
+    $.ajax({
+        type: "GET",
+        url: "./include/get_packs.php",
+        datatype: "json",
+        cache: false
+    }).done(function(result) {
+
+        var jsonObj = $.parseJSON(result);
+
+
+        /*for each pack, place the packs data in the defined packs object,
+         and create the menu items */
+        var jsonPacks = jsonObj.packs;
+
+        $.each(jsonPacks, function(idx, pack) {
+
+            var packImage = new Image();
+            var packBg = new Image();
+            packImage = "img/" + idx + ".png";
+            packBg = "img/" + idx + "/background.png";
+
+            //create the menu items
+            $("#hotspots-menu")
+                    .append($("<div>")
+                    .addClass("menu-item")
+                    .append($("<img>")
+                    .attr("src", packImage)
+                    .addClass("nav")).append($("<p>").html(idx))
+                    );
+            //create the backgrounds            
+            $("#hotspots-layout")
+                    .append($("<img>")
+                    .addClass("background")
+                    .attr("src", packBg)
+                    .attr("id", idx));
+        });
+
+        initPageNavigation();
+    });
+}
+
+function initPageNavigation() {
+
+    //initialise the navigatiion for the menu item
+    $(".nav").unbind().on('mousedown touchstart', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        //assign the selected theme
+        var theme = $(this).next().html();
+        hotspot = eval(theme);
+
+        //show the selected background, objects, and init the large images and sounds
+        $("#" + hotspot.name).show();
+        $("#dark-bg").fadeIn(2000);
+        initPositions();
+        drawObjects();
+        initImages();
+        initObjects();
+        initSounds();
+
+
+        //show the hotspot layout
+        $("#hotspots-menu").hide();
+        $("#hotspots-layout").show();
+        $("#back, #refresh").show();
+    });
+
+
+
+    $("#back").unbind().on('mousedown touchstart', function(event) {
+
+        imgLayer.remove();
+        imgLayer.draw();
+
+        initStage();
+        initLayers();
+
+        //show the hotspot menu
+        $("#hotspots-menu").show();
+        $("#hotspots-layout, .background, #dark-bg").hide();
+        $("#back, #refresh").hide();
+    });
+
+    $("#refresh").unbind().on('mousedown touchstart', function(event) {
+
+        imgLayer.remove();
+        imgLayer.draw();
+
+        initStage();
+        initLayers();
+
+        initPositions();
+        drawObjects();
+        initImages();
+        initObjects();
+        initSounds();
+
+    });
+
+}
+
