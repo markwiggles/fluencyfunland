@@ -1,24 +1,4 @@
-html {
-    font-size: 16px;
-    background-image:url('../../img/wave.jpg');
-    background-repeat:repeat;
-    margin: 0;
-    padding: 0;
-}
-﻿body {
-    margin: 0;
-    padding: 0;
-}
-#outer-wrapper {
-    width: 64em;
-    height: 48em;
-    margin: 0 auto;
-}
 
-header img {
-    margin: 0 auto;
-    width: 100%;
-}
 #content {
     position: relative;
 }
@@ -34,7 +14,7 @@ header img {
 }
 #jigsaw-menu p {
     margin:0;
-    font-family: "Comic Sans MS", cursive, sans-serif, MarkerFelt-Thin, sans-serif; 
+    font-family: "Comic Sans MS", MarkerFelt-Thin, sans-serif;
     font-size: 50px;
 }
 #puzzle {
@@ -54,56 +34,9 @@ header img {
     display:none;
 }
 
-.loading {
-    background-image: url('../../img/ajax-loader.gif');
-    background-repeat: no-repeat;
-    background-position: 50% 5%; 
-}
 
 #background {
     position:absolute;
     opacity: 0.7;
     display:none;
-}
-
-#back, #refresh {
-    position: absolute;
-    top: 5px;
-    height: 50px;
-    width: auto;
-    z-index: 99;
-    display: none;
-}
-#back {
-    left: 5px;
-}
-#refresh {
-    left: 960px;
-}
-
-#back:hover, #refresh:hover {
-    -webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
-    filter: url(shadow.svg#drop-shadow);
-    /* for IE 8 & 9 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    /* For IE 5.5 - 7 */
-    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    cursor: pointer;
-}
-#back:active, #refresh:active {
-    opacity: 0.7;
-    cursor: pointer;
-}
-.nav:hover {
--webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
-    filter: url(shadow.svg#drop-shadow);
-    /* for IE 8 & 9 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    /* For IE 5.5 - 7 */
-    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    cursor: pointer;
-}
-.nav:active {
-    opacity: 0.7;
-    cursor: pointer;
 }

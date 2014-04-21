@@ -3,29 +3,23 @@
 var stage = null;
 var imgLayer = null;
 var txtLayer = null;
-
 var images = {};
 var tweens = {};
 
 $(function() {
-
     initStage();
     initLayers();
-
-
     //displayPosition("hotspots-layout");
 });
 
 
-function initImages() {
-
+function createImages() {
     $.each(hotspot.objects, function(idx, object) {
-        drawImage(object.name);
+        drawImage(object);
     });
 }
 
 function initObjects() {
-
 
     //initially show the normal image
     $(".objGlow").hide();
@@ -93,106 +87,22 @@ function initSounds() {
     });
 }
 
-function initStage() {
-//set the stage
-    stage = new Kinetic.Stage({
-        container: 'container',
-        width: 1024,
-        height: 680
-    });
+function tweenCallback(tween, objectName) {
+    //show text for the object
+    drawText(512, 20, 60, objectName);
+    $.ionSound.play(objectName);
+    //initiate event to remove large image on click
+    $("#container").on("mousedown touchstart", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        txtLayer.removeChildren();
+        tween.reset();
+        imgLayer.draw();
+        txtLayer.draw();
+        $(".objects").show();
+        initObjects();
+        $("#container").hide();
+        $("#hotspots-layout").css({opacity: "1.0"});
+    }); //end event initialisation
 }
 
-function initLayers() {
-//create the layer
-    imgLayer = new Kinetic.Layer();
-    txtLayer = new Kinetic.Layer();
-    stage.add(imgLayer);
-    stage.add(txtLayer);
-}
-
-
-function drawText(posX, posY, size, message) {
-
-    var textMsg = new Kinetic.Text({
-        x: posX,
-        y: posY,
-        text: message,
-        fontSize: size,
-        fontStyle: "bold",
-        fontFamily: 'Comic Sans MS',
-        shadowColor: "darkgrey",
-        shadowOffsetX: 2,
-        shadowOffsetY: 2,
-        stroke: "black",
-        strokeWidth: 1,
-        fill: 'white'
-    });
-    //center the text
-    textMsg.offsetX(textMsg.width() / 2);
-    txtLayer.add(textMsg);
-    stage.add(txtLayer);
-}//end drawText
-
-function drawImage(objectName) {
-
-    var object = hotspot.objects[objectName];
-
-    var imageObj = new Image();
-    imageObj.onload = function() {
-        var image = new Kinetic.Image({
-            x: object.x,
-            y: object.y,
-            width: 100,
-            height: 100,
-            image: imageObj,
-            id: objectName
-        });
-        imgLayer.add(image);
-        stage.add(imgLayer);
-
-        images[objectName] = image;
-        image.hide();
-        createTween(objectName);
-    };
-    imageObj.src = hotspot.path + object.name + ".png";
-}
-
-function createTween(objectName) {
-
-    var image = images[objectName];
-
-    var tween = new Kinetic.Tween({
-        node: image,
-        force3D: true,
-        duration: 0.5,
-        x: 280,
-        y: 50,
-        scaleX: 5.5,
-        scaleY: 5.5,
-        onFinish: function() {
-
-            //show text for the object
-            drawText(512, 20, 60, objectName);
-            $.ionSound.play(objectName);
-
-            //initiate event to remove large image on click
-            $("#container").on("mousedown touchstart", function(event) {
-                event.stopPropagation();
-                event.preventDefault();
-
-                txtLayer.removeChildren();
-                tween.reset();
-                imgLayer.draw();
-                txtLayer.draw();
-
-                $(".objects").show();
-                initObjects();
-                $("#container").hide();
-                $("#hotspots-layout").css({opacity: "1.0"});
-            });//end event initialisation
-        }//end onFinish
-
-    });
-    //add tween to object
-    tweens[objectName] = tween;
-}

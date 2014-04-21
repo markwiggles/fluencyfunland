@@ -9,121 +9,69 @@ var hotspot = {
 
 var farm = {name: "farm", path: "img/farm/"};
 farm.positions = [
-    {x: 820, y: 440},
-    {x: 650, y: 500},
-    {x: 100, y: 500},
-    {x: 420, y: 500},
-    {x: 700, y: 440},
-    {x: 800, y: 300},
-    {x: 20, y: 340},
-    {x: 600, y: 300},
-    {x: 280, y: 480},
-    {x: 700, y: 300}
+    {posX: 820, posY: 440},
+    {posX: 650, posY: 500},
+    {posX: 100, posY: 500},
+    {posX: 420, posY: 500},
+    {posX: 700, posY: 440},
+    {posX: 800, posY: 300},
+    {posX: 20, posY: 340},
+    {posX: 600, posY: 300},
+    {posX: 280, posY: 480},
+    {posX: 700, posY: 300}
 ];
 
 farm.objects = {
-    bird: {name: "bird", scale: 0.3},
-    farmer: {name: "farmer", scale: 1},
-    cow: {name: "cow", scale: 0.8},
-    duck: {name: "duck", scale: 0.4},
-    chicken: {name: "chicken", scale: 0.5},
-    scarecrow: {name: "scarecrow", scale: 1},
-    goat: {name: "goat", scale: .8},
-    guineapig: {name: "guineapig", scale: 0.4},
-    kitten: {name: "kitten", scale: 0.5},
-    rabbit: {name: "rabbit", scale: 0.3}
+    bird: {name: "bird", picAdj: 0.3},
+    farmer: {name: "farmer", picAdj: 1},
+    cow: {name: "cow", picAdj: 0.8},
+    duck: {name: "duck", picAdj: 0.4},
+    chicken: {name: "chicken", picAdj: 0.5},
+    scarecrow: {name: "scarecrow", picAdj: 1},
+    goat: {name: "goat", picAdj: .8},
+    guineapig: {name: "guineapig", picAdj: 0.4},
+    kitten: {name: "kitten", picAdj: 0.5},
+    rabbit: {name: "rabbit", picAdj: 0.3}
 };
 
 var park = {name: "park", path: "img/park/"};
 
 park.positions = [
-    {x: 820, y: 520},
-    {x: 320, y: 230},
-    {x: 180, y: 520},
-    {x: 500, y: 300},
-    {x: 200, y: 240},
-    {x: 500, y: 500}
+    {posX: 820, posY: 520},
+    {posX: 320, posY: 230},
+    {posX: 180, posY: 520},
+    {posX: 500, posY: 300},
+    {posX: 200, posY: 240},
+    {posX: 500, posY: 500}
 ];
 
 park.objects = {
-    ball: {name: "ball", scale: 1.1},
-    bicycle: {name: "bicycle", scale: 1.3},
-    dog: {name: "dog", scale: 1.1},
-    football: {name: "football", scale: 0.6},
-    picnic: {name: "picnic", scale: 1.7},
-    running: {name: "running", scale: 1.7},
-    fountain: {name: "fountain", scale: 1.6, x: 10, y: 250},
-    slide: {name: "slide", scale: 3, x: 700, y: 220},
-    swings: {name: "swings", scale: 3, x: 830, y: 170}
+    ball: {name: "ball", picAdj: 1.1},
+    bicycle: {name: "bicycle", picAdj: 1.3},
+    dog: {name: "dog", picAdj: 1.1},
+    football: {name: "football", picAdj: 0.6},
+    picnic: {name: "picnic", picAdj: 1.7},
+    running: {name: "running", picAdj: 1.7},
+    fountain: {name: "fountain", picAdj: 1.6, posX: 10, posY: 250},
+    slide: {name: "slide", picAdj: 3, posX: 700, posY: 220},
+    swings: {name: "swings", picAdj: 3, posX: 830, posY: 170}
 };
 
-
-//display hotspots menu
 getPacks();
 
+function addObjParams(objects) {
+    $.each(objects, function(objName, object) {
 
-/** Function
- * 
- * @returns {undefined}
- */
-function initPositions() {
-
-    shuffle(hotspot.positions);
-
-    var i = 0;
-    $.each(hotspot.objects, function(idx, object) {
-        if (idx !== "swings" && idx !== "slide" && idx !== "fountain") {
-            object.x = hotspot.positions[i].x;
-            object.y = hotspot.positions[i].y;
-        }
-        i++;
+        object.imgName = objName;
+        object.imgSrc = hotspot.path + objName + ".png";
+        object.scale = 0.1;
+        object.scaleTo = 1;
+        object.duration = 0.5;
+        object.easing = "Linear";
+        object.callback = function() {
+            tweenCallback(tweens[objName], objName);
+        };
     });
-
-}
-
-function drawObjects() {
-
-    //remove previous objects
-    $("#hotspots-layout .objects").remove();
-
-    $.each(hotspot.objects, function(idx, object) {
-
-        //adjust the image height so the objects look realistic
-        var divHt = 150 * object.scale;
-        var divWd = 150 * object.scale;
-
-        //adjust the perspective size according to the y coord
-        var divHt = Math.round(divHt * object.y / 680 * 1.5);
-        var divWd = Math.round(divWd * object.y / 680 * 1.5);
-
-        //adjust coords for smaller dimensions than original div
-        var x = object.x + (150 - divWd);
-        var y = object.y + (150 - divHt);
-        var zIndex = Math.round(y);
-
-        $("#hotspots-layout")
-                .append($("<div>").addClass("objects")
-                .css({height: divHt, width: divWd})
-                .attr("id", object.name)
-                .css({left: x, top: y})
-                .css("zIndex", zIndex)
-                .append($("<img>")
-                .attr("src", hotspot.path + object.name + "_s.png")
-                .addClass("objImage")
-                .attr("id", object.name + "_s"))
-                .append($("<img>")
-                .attr("src", hotspot.path + object.name + "_g.png")
-                .addClass("objGlow")
-                .attr("id", object.name + "_g"))
-                );
-    });
-}
-
-function shuffle(o) {
-    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i),
-            x = o[--i], o[i] = o[j], o[j] = x)
-        ;
-    return o;
 }
 
 function getPacks() {
@@ -183,12 +131,14 @@ function initPageNavigation() {
         //show the selected background, objects, and init the large images and sounds
         $("#" + hotspot.name).show();
         $("#dark-bg").fadeIn(2000);
+
+        addObjParams(farm.objects);
+        addObjParams(park.objects);
         initPositions();
         drawObjects();
-        initImages();
+        createImages();
         initObjects();
         initSounds();
-
 
         //show the hotspot layout
         $("#hotspots-menu").hide();
@@ -196,15 +146,24 @@ function initPageNavigation() {
         $("#back, #refresh").show();
     });
 
-
-
     $("#back").unbind().on('mousedown touchstart', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        imgLayer.remove();
+        imgLayer.draw();
 
         imgLayer.remove();
         imgLayer.draw();
 
         initStage();
         initLayers();
+
+        initPositions();
+        drawObjects();
+        createImages();
+        initObjects();
+        initSounds();
 
         //show the hotspot menu
         $("#hotspots-menu").show();
@@ -213,6 +172,8 @@ function initPageNavigation() {
     });
 
     $("#refresh").unbind().on('mousedown touchstart', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
 
         imgLayer.remove();
         imgLayer.draw();
@@ -222,11 +183,69 @@ function initPageNavigation() {
 
         initPositions();
         drawObjects();
-        initImages();
+        createImages();
         initObjects();
         initSounds();
-
     });
-
 }
+
+function initPositions() {
+
+    shuffle(hotspot.positions);
+    var i = 0;
+    $.each(hotspot.objects, function(idx, object) {
+        if (idx !== "swings" && idx !== "slide" && idx !== "fountain") {
+            object.posX = hotspot.positions[i].posX;
+            object.posY = hotspot.positions[i].posY;
+        }
+        i++;
+    });
+}
+
+function drawObjects() {
+
+    //remove previous objects
+    $("#hotspots-layout .objects").remove();
+
+    $.each(hotspot.objects, function(idx, object) {
+
+        //adjust the image height so the objects look realistic
+        var divHt = 150 * object.picAdj;
+        var divWd = 150 * object.picAdj;
+
+        //adjust the perspective size according to the y coord
+        var divHt = Math.round(divHt * object.posY / 680 * 1.5);
+        var divWd = Math.round(divWd * object.posY / 680 * 1.5);
+
+        //adjust coords for smaller dimensions than original div
+        var x = object.posX + (150 - divWd);
+        var y = object.posY + (150 - divHt);
+        var zIndex = Math.round(y);
+
+        $("#hotspots-layout")
+                .append($("<div>").addClass("objects")
+                .css({height: divHt, width: divWd})
+                .attr("id", object.name)
+                .css({left: x, top: y})
+                .css("zIndex", zIndex)
+                .append($("<img>")
+                .attr("src", hotspot.path + object.name + "_s.png")
+                .addClass("objImage")
+                .attr("id", object.name + "_s"))
+                .append($("<img>")
+                .attr("src", hotspot.path + object.name + "_g.png")
+                .addClass("objGlow")
+                .attr("id", object.name + "_g"))
+                );
+    });
+}
+
+function shuffle(o) {
+    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i),
+            x = o[--i], o[i] = o[j], o[j] = x)
+        ;
+    return o;
+}
+
+
 

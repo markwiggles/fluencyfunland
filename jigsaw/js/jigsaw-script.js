@@ -28,7 +28,7 @@ var jig4 = {name: "jig4", numPieces: 9, numCols: 3, numRows: 3, widthImg: 200, h
 var jig5 = {name: "jig5", numPieces: 9, numCols: 3, numRows: 3, widthImg: 200, heightImg: 158, sounds: ["monkeys"]};
 
 //completion messages - shown randomly
-var messages = ["well done", "you did it", "all finished", "awesome job", "too cool", "excellent", "great work", "you are the best", "you are smart"];
+var messages = ["well done", "you did it", "all finished", "awesome job", "too cool", "excellent"];
 
 /**Function: runs when page loads
  */
@@ -166,7 +166,6 @@ function initDrag(dragObj) {
         //if this piece was in current box
         if (this.pieceId === currBox.occupy) {
             currBox.occupy = "empty";
-            this.placed = false;
         }
     });
 
@@ -174,7 +173,6 @@ function initDrag(dragObj) {
     dragObj.on("dragmove", function() {
 
         document.body.style.cursor = "move";
-        this.moveToTop();
 
         //assign the piece to be in the current box
         isCenterInBox(this);
@@ -229,11 +227,10 @@ function initDrag(dragObj) {
                 dragObj.setX(currBox.getX());
                 dragObj.setY(currBox.getY());
                 currBox.occupy = this.pieceId;
-                this.placed = true;
 
-                //if it is the right piece for the nox
+                //if it is the right piece
                 if (this.pieceId === currBox.pieceId) {
-                    this.correct = true;
+                    this.placed = true;
                     this.setDraggable(false);
                     this.setStroke("");
                     this.setStrokeWidth(0);
@@ -292,9 +289,12 @@ function isCenterInBox(dragObj) {
 }
 
 function celebrate() {
+
+    for (var i = 0; i < jigsaw.numPieces; i++) {
+    }
     pceLayer.draw();
     $.ionSound.play(jigsaw.sounds[0]);
-    var message = messages[Math.floor((Math.random() * messages.length))];
+    var message = messages[Math.floor((Math.random() * 6))];
     drawText(widthContainer / 2, 200, 70, message);
 }
 
@@ -302,7 +302,8 @@ function isFinished() {
     var count = 0;
     var pieces = pceLayer.getChildren();
     $.each(pieces, function(idx, piece) {
-        if (piece.correct) {
+
+        if (piece.placed) {
             count++;
         }
     });

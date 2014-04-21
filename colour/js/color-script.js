@@ -9,58 +9,79 @@ var layer1 = null;
 var layer2 = null;
 var layer3 = null;
 var layer4 = null;
+var layer5 = null;
+var layer6 = null;
 var stage = null;
-var currentDrawing = null;
+var completed = false;
 
-$(function() {
+var drawing = {
+    name: null,
+    x: null,
+    y: null,
+    scale: null,
+    shapeCount: null, //count of number of shapes
+    layerBg: [], //shapes in background - drawn first
+    layer2: [], //shapes drawn as per drawColor, but in front
+    layer3: [], //shapes to be all black
+    layer4: [], //shapes to be all white
+    layer5: [], //shapes to be white, and converted to backgorund color on finish
+    layer6: [] ////shapes to be all black in front of others
+};
 
-    $("#color-canvas").css("background-color", "white");
-    $("#content").show();
 
-    initCanvas();
-    initFindColor();
-    initSelectColor();
-    initLayers();
-    initDrawingNavigation();
 
-    /*used in testing*/
-    //displayPosition(); 
+$("#color-canvas").css("background-color", "white");
+$("#content").show();
 
-});
+initCanvas();
+initFindColor();
+initSelectColor();
+initLayers();
+initDrawingNavigation();
+
+/*used in testing*/
+//displayPosition("container");
+
 
 function initDrawingNavigation() {
-    $(".color-thumb").on({'mousedown touchstart': function() {
-            currentDrawing = eval($(this).attr("id").replace("thumb", ""));
+    $(".color-thumb").on('mousedown touchstart', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
 
-            //hide menu
-            $("#color-menu").hide();
-            //show drawing
-            $("#drawing, #back").show();
-            //init selected drawing shapes
-            initShapes(currentDrawing);
-            initShapeBoolean(currentDrawing);
-        }});
+        drawing = eval($(this).attr("id").replace("thumb", ""));
 
-    $("#back").on({'mousedown touchstart': function() {
-            //remove drawing and get back to menu
-            clearLayers();
-            $("#drawing").hide();
-            $("#color-menu").show();
-            document.body.style.cursor = "auto";
-        }});
+        //show the blank drawing//init selected drawing shapes
+        $("#color-menu").hide();
+        $("#drawing, #back").show();
+        initShapes();
+        initShapeBoolean();
+    });
+
+    $("#back").on('mousedown touchstart', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        //remove drawing and get back to menu
+        clearLayers();
+        $("#container").removeClass();
+        $("#drawing, #back").hide();
+        $("#color-menu").show();
+        document.body.style.cursor = "auto";
+        completed = false;
+    });
 
 
 }
 
 function clearLayers() {
     initLayers();
-    initShapeBoolean(currentDrawing);
+    initShapeBoolean();
 }
 
-function initShapes(drawing) {
-    for (var i = 1; i <= drawing.shapes; i++) {
+function initShapes() {
+    for (var i = 1; i <= drawing.shapeCount; i++) {
         var shape = "shape" + i;
-        drawShape(drawing, shape);
+        drawShape(shape);
     }
 }
 
@@ -72,72 +93,82 @@ function initLayers() {
     stage = new Kinetic.Stage({
         container: 'container',
         width: 774,
-        height: 768
+        height: 680
     });
     layer0 = new Kinetic.Layer();
     layer1 = new Kinetic.Layer();
     layer2 = new Kinetic.Layer();
     layer3 = new Kinetic.Layer();
     layer4 = new Kinetic.Layer();
-
+    layer5 = new Kinetic.Layer();
+    layer6 = new Kinetic.Layer();
 }
 
 /*
  * Function to create a shape by defining a
  * drawing function which draws a shape
  */
-function drawShape(shape, name) {
+function drawShape(shape) {
 
-    shape[name].object = new Kinetic.Shape({
+    //Create the drawing shape using the predefined drawing code
+    drawing[shape].object = new Kinetic.Shape({
         sceneFunc: function(ctx) {
-            //create the shape
-            eval(shape[name].code);
-            // KineticJS specific context method
+            eval(drawing[shape].code);
             ctx.fillStrokeShape(this);
         },
         fill: drawColor,
         stroke: strokeColor,
         strokeWidth: 1
     });
-
-
     //add the offsets and scale
-    shape[name].object.offsetX(shape.x);
-    shape[name].object.offsetY(shape.y);
-    shape[name].object.scale({x: shape.scale, y: shape.scale});
+    drawing[shape].object.offsetX(drawing.x);
+    drawing[shape].object.offsetY(drawing.y);
+    drawing[shape].object.scale({x: drawing.scale, y: drawing.scale});
 
     // add the specified shape to the background layer
-    if (shape.layer0.indexOf(name) !== -1) {
-        shape[name].object.setFill("black"); //set the fill
-        shape[name].object.setStroke("black");
-        layer0.add(shape[name].object);
+    if (drawing.layer0.indexOf(shape) !== -1) {
+        drawing[shape].object.setFill("black"); //set the fill
+        drawing[shape].object.setStroke("black");
+        layer0.add(drawing[shape].object);
     } else {
 
-        // add the shape to the main layer
-        layer1.add(shape[name].object);
+        // add the specified shape to the main layer
+        layer1.add(drawing[shape].object);
 
-        //add third layer for specified objects - drawColor 
-        if (shape.layer2.indexOf(name) !== -1) {
-            shape[name].object.setFill(drawColor);
-            shape[name].object.setStroke(strokeColor);
-            layer2.add(shape[name].object);
+        //add third layer for specified shapes - drawColor 
+        if (drawing.layer2.indexOf(shape) !== -1) {
+            drawing[shape].object.setFill(drawColor);
+            drawing[shape].object.setStroke(strokeColor);
+            layer2.add(drawing[shape].object);
         }
 
-        //add second layer for specified objects - black
-        if (shape.layer3.indexOf(name) !== -1) {
-            shape[name].object.setFill("black");
-            shape[name].object.setStroke("black");
-            layer3.add(shape[name].object);
+        //add second layer for specified shapes - black
+        if (drawing.layer3.indexOf(shape) !== -1) {
+            drawing[shape].object.setFill("black");
+            drawing[shape].object.setStroke("black");
+            layer3.add(drawing[shape].object);
         }
 
-        //add fourth layer for specified objects - all white
-        if (shape.layer4.indexOf(name) !== -1) {
-            shape[name].object.setFill("white");
-            shape[name].object.setStroke("white");
-            layer4.add(shape[name].object);
+        //add fourth layer for specified shapes - all white
+        if (drawing.layer4.indexOf(shape) !== -1) {
+            drawing[shape].object.setFill("white");
+            drawing[shape].object.setStroke("white");
+            layer4.add(drawing[shape].object);
         }
+                        //add fifth layer for specified shapes - all white, unless finished
+        if (drawing.layer5.indexOf(shape) !== -1) {
+            drawing[shape].object.setFill("black");
+            drawing[shape].object.setStroke("black");
+            layer5.add(drawing[shape].object);
+        }
+        //add fifth layer for specified shapes - all white, unless finished
+        if (drawing.layer6.indexOf(shape) !== -1 && !checkFinish()) {
+            drawing[shape].object.setFill("white");
+            drawing[shape].object.setStroke("white");
+            layer6.add(drawing[shape].object);
+        }
+
     }
-
 
     // add the layers to the stage
     stage.add(layer0);
@@ -145,21 +176,21 @@ function drawShape(shape, name) {
     stage.add(layer2);
     stage.add(layer3);
     stage.add(layer4);
+    stage.add(layer5);
+    stage.add(layer6);
 
-    // initialise the event to redraw with (new?) color
-    shape[name].object.on('mousedown touchstart', function() {
-        drawShape(shape, name);
-        if (drawColor !== "white") {
-            shape[name].colored = true;
-            console.log("color" + drawColor);
-            console.log("changed to true");
+    // initialise the event to draw shapes
+    drawing[shape].object.on('mousedown touchstart', function() {
+        
+        if (!completed) {
+            drawShape(shape);
+            if (drawColor !== "white") {
+                drawing[shape].colored = true;
+            }
+            checkFinish() ? celebrate() : "";
         }
-        console.log(name);
     });
-
-    checkFinish(shape);
 }
-
 
 function initCanvas() {
     var mycanvas = document.getElementById("color-canvas");
@@ -175,10 +206,10 @@ function initCanvas() {
 
 function initFindColor() {
 
-    $('#color-canvas').mousemove(function(e) {
+    $('#color-canvas').mousemove(function(event) {
         var pos = findPos(this);
-        var x = e.pageX - pos.x;
-        var y = e.pageY - pos.y;
+        var x = event.pageX - pos.x;
+        var y = event.pageY - pos.y;
         var coord = "x=" + x + ", y=" + y;
         var c = this.getContext('2d');
         var p = c.getImageData(x, y, 1, 1).data;
@@ -189,51 +220,27 @@ function initFindColor() {
         //drawColor = hex;
         $("#color-pick").css("background-color", hex);
         document.getElementById("color-canvas").style.cursor = "pointer";
-    }
-    );
+    });
 }
 
 function initSelectColor() {
 
-    $('#color-canvas').on({'mousedown touchstart': function(e) {
-            var pos = findPos(this);
-            var x = e.pageX - pos.x;
-            var y = e.pageY - pos.y;
-            var coord = "x=" + x + ", y=" + y;
-            var c = this.getContext('2d');
-            var p = c.getImageData(x, y, 1, 1).data;
-            var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
-            //do something with the color
-            //console.log(hex);
-            drawColor = hex;
-            //strokeColor = hex;
-            makeCursor(hex);
-
-            $("#color-pick").css("background-color", hex);
+    $('#color-canvas').on({'mousedown touchstart': function(event) {
+            if (!completed) {
+                var pos = findPos(this);
+                var x = event.pageX - pos.x;
+                var y = event.pageY - pos.y;
+                var coord = "x=" + x + ", y=" + y;
+                var c = this.getContext('2d');
+                var p = c.getImageData(x, y, 1, 1).data;
+                var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+                drawColor = hex;
+                //strokeColor = hex;
+                makeCursor(hex);
+                $("#color-pick").css("background-color", hex);
+            }
         }
     });
-}
-
-function displayPosition() {
-    $("#content").mousedown(function(e) {
-        var pos = findPos(this);
-        x = e.pageX - pos.x;
-        y = e.pageY - pos.y;
-        var coordinateDisplay = "x=" + x + ", y=" + y;
-        console.log(coordinateDisplay);
-    });
-}
-
-function findPos(obj) {
-    var curleft = 0, curtop = 0;
-    if (obj.offsetParent) {
-        do {
-            curleft += obj.offsetLeft;
-            curtop += obj.offsetTop;
-        } while (obj = obj.offsetParent);
-        return {x: curleft, y: curtop};
-    }
-    return undefined;
 }
 
 function rgbToHex(r, g, b) {
@@ -290,46 +297,57 @@ function makeCursor(color) {
     }
 
 }
-function initShapeBoolean(drawing) {
+function initShapeBoolean() {
 
-    for (var i = 1; i <= drawing.shapes; i++) {
+    for (var i = 1; i <= drawing.shapeCount; i++) {
         var shape = "shape" + i;
         drawing[shape].colored = false;
-
     }
     //assign true to pre-colored shapes ie outline, black, and white
     $.each(drawing.layer0, function(idx, shapeNo) {
         drawing[shapeNo].colored = true;
     });
-
     $.each(drawing.layer3, function(idx, shapeNo) {
         drawing[shapeNo].colored = true;
     });
     $.each(drawing.layer4, function(idx, shapeNo) {
         drawing[shapeNo].colored = true;
     });
+    $.each(drawing.layer5, function(idx, shapeNo) {
+        drawing[shapeNo].colored = true;
+    });
+    $.each(drawing.layer6, function(idx, shapeNo) {
+        drawing[shapeNo].colored = true;
+    });
 
 }
 
 
-function checkFinish(drawing) {
+function checkFinish() {
 
-    var shapes = drawing.shapes;
     var count = 0;
-
-    var idxOthers = ["x", "y", "scale", "shapes", "layer0", "layer2", "layer3", "layer4"]
-
     $.each(drawing, function(idx, shape) {
-        //console.log("i " + idx);
-        //if the idx is a shape ie not contained in the array
-        if (idxOthers.indexOf(idx) === -1) {
-            console.log(idx + ":" + drawing[idx].colored);
-
             if (drawing[idx].colored) {
                 count++;
             }
-        }
     });
-    console.log(count);
-    console.log(drawing);
+    return count === drawing.shapeCount;
+}
+
+function celebrate() {
+    $("#container").removeClass();
+    $("#container").addClass(drawing.name);
+    addShapeBgColor();
+    completed = true;
+    document.body.style.cursor = "default";
+}
+
+function addShapeBgColor() {
+    //for the shapes in layer 5 array, add the bg color
+    $.each(drawing.layer6, function(idx, shape) {
+        drawing[shape].object.setFill(drawing.colorBg);
+        drawing[shape].object.setStroke(drawing.colorBg);
+        layer6.add(drawing[shape].object);
+    });
+    stage.add(layer6);
 }

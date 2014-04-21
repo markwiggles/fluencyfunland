@@ -1,0 +1,91 @@
+/* 
+    Document   : main-styles
+    Created on : 14/04/2014, 1:39:36 PM
+    Author     : Mark
+    Description:
+        styles shared across activities
+*/
+
+root { 
+    display: block;
+}
+
+html {
+    font-size: 16px;
+    background-image:url('../img/wave.jpg');
+    font-family: "Comic Sans MS", MarkerFelt-Thin, sans-serif;
+    background-repeat:repeat;
+}
+﻿body {
+}
+#outer-wrapper {
+    width: 1024px;
+    height: 768px;
+    margin: 0 auto;
+}
+
+header img {
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+}
+#content {
+    width: 1024px;
+    height: 680px;
+    position: relative;
+}
+
+#container {
+    width: 1024px;
+    height: 620px;
+}
+
+#back, #refresh {
+    position: absolute;
+    height: 50px;
+    width: auto;
+    z-index: 99;
+    display: none;
+    opacity: 1;
+}
+#skip {
+    position: absolute;
+    top: 540px;
+    left: 880px;
+    height: 80px;
+}
+#skip:hover {
+    cursor: pointer;
+}
+
+#back {
+    left: 5px;
+}
+#refresh {
+    left: 960px;
+}
+
+#back:hover, #refresh:hover, #skip:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+.nav {
+    opacity: 1;
+}
+
+.nav:hover {
+    box-shadow: 0 5px 15px 10px rgba(255,255,5,0.7);
+    -moz-box-shadow: 0 5px 15px 10px rgba(255,255,5,0.7);;
+    -webkit-box-shadow: 0 5px 15px 10px rgba(255,255,5,0.7);
+    cursor: pointer;
+}
+
+.nav:active {
+    cursor: pointer;
+}
+
+.loading {
+    background-image: url('../img/ajax-loader.gif');
+    background-repeat: no-repeat;
+    background-position: 50% 5%; 
+}

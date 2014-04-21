@@ -7,8 +7,7 @@
         <meta charset="utf-8" />
         <title>Jigsaw</title>
 
-
-
+        <link rel="stylesheet" href="../css/main-styles.css"/>
         <link rel="stylesheet" href="css/jigsaw-styles.css"/>
     </head>
     <body>
@@ -40,7 +39,7 @@
 
         <script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="../js/ion.sound.min.js"></script>
-        <script type="text/javascript" src="../js/kinetic-v5.0.1.js"></script>
+        <script type="text/javascript" src="../js/kinetic-v5.1.0.min.js"></script>
         <script type="text/javascript" src="js/jigsaw-script.js"></script>
         <script type="text/javascript" src="../js/position.js"></script>
     </body>

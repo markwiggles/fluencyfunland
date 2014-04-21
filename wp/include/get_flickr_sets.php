@@ -22,6 +22,9 @@ $jsonPhotosetList = callFlickr($photoListArg);
 
 echo $jsonPhotosetList;
 
+
+
+
 function callFlickr($arg) {
 
     $query = http_build_query($arg);

@@ -1,32 +1,41 @@
-html {
-    font-size: 16px;
-    background-image:url('../../img/wave.jpg');
-    background-repeat:repeat;
-}
-﻿body {
-}
-#outer-wrapper {
-    width: 64em;
-    height: 48em;
-    margin: 0 auto;
-}
 
-header img {
-    margin: 0 auto;
-    width: 100%;
-    height: auto;
-}
 #theme-menu, #custom-menu {
     width: 1024px;
-    height: 560px;
+    height: 680px;
     background-color: white;
     text-align: center;
 }
-#theme-menu img {
-    width: 150px;
-    height: auto;
-    margin: 40px 40px 0 40px ;
+#custom-menu {
+    display: none;
 }
+
+#theme-menu img {
+    width: 180px;
+    height: auto;
+    margin: 33px 60px 0 40px ;
+}
+#image-div {
+    position: absolute;
+    top: 50px;
+    left: 110px;
+}
+#image-div img {
+    min-width: 804px;
+    max-width: 804px;
+    min-height: 560px;
+    max-height: 560px;
+    display: none;
+}
+
+#container {
+    width: 804px;
+    height: 560px;
+    position: absolute;
+    top: 60px;
+    left: 110px;
+    display: none;
+}
+
 .custom-item  {
     width: 150px;
     height: 104px;
@@ -49,41 +58,7 @@ header img {
     display: none;
 }
 
-#back {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    height: 50px;
-    width: auto;
-    z-index: 99;
-    display: none;
-}
-#back:hover{
-    -webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
-    filter: url(shadow.svg#drop-shadow);
-    /* for IE 8 & 9 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    /* For IE 5.5 - 7 */
-    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    cursor: pointer;
-}
-#back:active {
-    opacity: 0.7;
-    cursor: pointer;
-}
-.nav:hover {
--webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
-    filter: url(shadow.svg#drop-shadow);
-    /* for IE 8 & 9 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    /* For IE 5.5 - 7 */
-    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    cursor: pointer;
-}
-.nav:active {
-    opacity: 0.7;
-    cursor: pointer;
-}
+
 
 .photosets {
     float:right;
@@ -104,21 +79,12 @@ header img {
     background-color: #FF6699;
 }
 
-.loading {
-    background-image: url('../../img/ajax-loader.gif');
-    background-repeat: no-repeat;
-    background-position: top;
-}
-#content {
-    width: 1024px;
-    height: 768px;
-    position: relative;
-}
+
 
 #col1, #col2 {
     width: 110px;
     height: 560px;
-    margin-top: 2em;
+    margin-top: 40px;
 }
 #col1 {
     float: left;
@@ -132,23 +98,6 @@ header img {
     margin-left: 10px;
 }
 
-#bg-canvas, #bg-canvas2 {
-    position: absolute;
-    width: 804px;
-    height:560px;
-    top: 50px;
-    left: 110px;
-}
-#image-div {
-    float: left;
-    margin-top: 50px;
-    width: 804px;
-    height: 560px;
-}
-#image-div img {
-    width: 804px;
-    height: 560px;
-}
 .image_bg {
     /* -- CSS3 - add a drop shadow -- */
     -webkit-box-shadow: 0 0 15px 5px #fff;

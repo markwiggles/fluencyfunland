@@ -1,33 +1,20 @@
-/* 
-    Document   : color-styles
-    Created on : 15/03/2014, 7:39:07 AM
-    Author     : Mark
-    Description:
-        Purpose of the stylesheet follows.
-*/
 
-root { 
-    display: block;
-}
-
-html {
-    font-size: 16px;
-    background-image:url('../../img/wave.jpg');
-    background-repeat:repeat;
-}
-header {
-    margin: auto;
-    width: 1024px;
-}
 
 #content {
     width: 1024px;
     height: 680px;
     position: relative;
     margin: auto;
+    background-color: white;
 }
 #book {
-    height: 680px;
+    height: 100%;
+    width: 100%;
+}
+#color-menu {
+    width: 1024px;
+    height:620px;
+    
 }
 #container {
     width: 774px;
@@ -36,81 +23,71 @@ header {
     float: left;
     background-color: white;
 }
+.rocket {
+    background-image: url(../img/stars.jpg);
+    background-repeat:repeat;
+}
+.cowboy {
+    background-image: url(../img/cowboy_bg.png);
+}
+.flower {
+    background-image: url(../img/flower_bg.png);
+}
+.dino {
+    background-image: url(../img/dino_bg.png);
+}
+.soccer {
+    background-image: url(../img/park_bg.png);
+    background-size:cover;
+}
+
+
 #color-header {
     position: absolute;
     top: 0;
-    left: 280px;
-    height: 105px;
+    left: 320px;
+    height: 95px;
 }
 .color-thumb {
     position: absolute;
     width: 100px;
 }
 .color-thumb:hover {
-    height: 150px;
-    width: auto;
-    -webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
-    filter: url(shadow.svg#drop-shadow);
-    /* for IE 8 & 9 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    /* For IE 5.5 - 7 */
-    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-}
-.color-thumb:active {
-    opacity: 0.7;
+    height:150px;
+    width:auto;
 }
 
+
 #flowerthumb {
-    top: 160px;
-    left: 280px;
+    top: 140px;
+    left: 330px;
 }
 #rocketthumb {
-    top: 380px;
-    left: 300px;
-}
-#cowboythumb {
-    top: 160px;
-    left: 520px;
-}
-#dinothumb {
-    top: 380px;
-    left: 580px;
+    top: 360px;
+    left: 350px;
 }
 #soccerthumb {
-    top: 380px;
-    left: 130px;
+    top: 360px;
+    left: 180px;
 }
+#cowboythumb {
+    top: 140px;
+    left: 590px;
+}
+#dinothumb {
+    top: 360px;
+    left: 640px;
+}
+
 
 #colors {
     float: right;
     width:250px;
-    height: 768px;
-    background-color: white;
+    height: 680px;
 }
 
-#back {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    height: 50px;
-    width: auto;
-    z-index: 99;
-}
-#back:hover{
-    -webkit-filter: drop-shadow(10px 10px 9px rgba(255,255,5,1));
-    filter: url(../css/shadow.svg#drop-shadow);
-    /* for IE 8 & 9 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    /* For IE 5.5 - 7 */
-    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=12, OffY=12, Color='#444')";
-    cursor: auto;
-}
-#back:active {
-    opacity: 0.7;
-    cursor: auto;
-}
 
-#drawing, #back {
+#drawing {
     display: none;
 }
 

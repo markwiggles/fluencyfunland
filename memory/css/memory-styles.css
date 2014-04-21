@@ -1,0 +1,164 @@
+
+#intro {
+    width: 1024px;
+    height: 680px;
+    text-align: center;
+    background-color: white;
+    background-image:url('../../img/tile.png');
+    background-repeat:repeat;
+}
+
+#pointer {
+    position: absolute;
+    display:none;
+    top: 500px;
+    left: 512px;
+}
+#memory-menu {
+    width: 1024px;
+    height: 680px;
+    background-color: white;
+    text-align: center;
+    background-image:url('../../img/tile.png');
+    background-repeat:repeat;
+    display:none;
+}
+#intro h1 {
+    color: purple;
+    font-size: 70px;
+    margin: 0;
+    padding-top: 20px;
+}
+#intro h2 {
+    color: blue;
+    font-size: 40px;
+    margin: 0;
+    padding-top: 20px;
+}
+.cardIntro {
+    height: 180px;
+    width: 110px;
+    position: absolute;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: white;
+    background-image: url('../img/animals.png');
+    background-repeat:repeat;
+}
+.cardIntro img {
+    background-color: white;
+    height: 180px;
+    width: 110px;
+    border-radius: 10px;
+    display: none;
+}
+
+#card1 {
+    left: 205px;  
+    top: 260px;
+}
+#card2 {
+    left: 360px;  
+    top: 260px;
+}
+#card3 {
+    left: 515px;  
+    top: 260px;
+}
+#card4 {
+    left: 670px;  
+    top: 260px;
+}
+
+#choose {
+    margin: 0;
+    padding-top:80px;
+    padding-bottom: 60px;
+    font-size: 50px;
+    color: purple;
+}
+.pack {
+    width: 200px;
+    height: 320px;
+    margin: 10px;
+    text-align: center;
+    display: inline-block;
+}
+.packImg {
+    height: 250px;
+    width: 152px;
+    margin: 15px;
+    border: 1px solid black;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: white;
+
+    background-repeat:repeat;
+}
+.pack p {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+}
+.pack-type{
+    font-size: 40px;
+    color: blue;
+}
+.pack-count {
+    font-size: 30px;
+    color: #7575A3;
+}
+#background {
+    margin-top: 0px;
+    width:1024px;
+    height: 100%;
+    display: none;
+}
+
+#card-layout {
+    width: 1024px;
+    height: 680px;
+    background-color: white;
+    text-align: center;
+    position: relative;
+    display:none;
+    background-image:url('../../img/tile.png');
+    background-repeat:repeat;
+}
+.cards, .deck {
+    height: 180px;
+    width: 110px;
+    margin: 15px;
+    border: 2px solid black;
+    border-radius: 10px;
+    position: absolute;
+    background-color: white;
+    background-repeat:repeat;
+}
+
+.cards {
+    display:none; 
+}
+.cards:hover {
+    cursor: pointer;
+}
+.card-image {
+    display:none;
+}
+.card-back {
+}
+
+.card-image {
+    height: 180px;
+    width: 110px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+#container {
+    top: 60px;
+    left:0;
+    position: absolute;
+    display: none;
+}
